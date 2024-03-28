@@ -1,10 +1,24 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link :to="{ name: 'home' }">Home</router-link> |
+    <router-link :to="{ name: 'about' }">About</router-link> |
+    <router-link :to="{ name: 'settings' }">Settings</router-link> |
+    <router-link :to="{ name: 'login' }" v-if="!isAuthed">Login</router-link>
+    <span v-else>Log off</span>
   </nav>
   <router-view/>
 </template>
+
+<script setup>
+import { computed } from 'vue'
+import { useUserStore } from '@/stores/UserStore.js'
+
+const userStore = useUserStore()
+
+const isAuthed = computed(() => {
+  return userStore.user !== null
+})
+</script>
 
 <style lang="scss">
 #app {
@@ -13,6 +27,10 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 nav {
