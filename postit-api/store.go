@@ -12,6 +12,7 @@ type Store interface {
 	// Users
 	GetUsers() ([]User, error)
 	GetUserById(id string) (*User, error)
+	GetUserByName(username string) (*User, error)
 	CreateUser(user *User) (*User, error)
 }
 
@@ -84,6 +85,12 @@ func (s *Storage) GetUsers() ([]User, error) {
 func (s *Storage) GetUserById(id string) (*User, error) {
 	var user User
 	err := s.db.QueryRow("SELECT id, username FROM users WHERE id = ?", id).Scan(&user.ID, &user.Username)
+	return &user, err
+}
+
+func (s *Storage) GetUserByName(username string) (*User, error) {
+	var user User
+	err := s.db.QueryRow("SELECT password, id FROM users WHERE username = ?", username).Scan(&user.Password, &user.ID)
 	return &user, err
 }
 
