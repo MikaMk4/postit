@@ -77,10 +77,13 @@ function logout() {
   justify-content: space-between;
   align-items: center;
   position: sticky;
-  top: 10px;
-  margin: 10px;
+  top: 0;
+  padding: 10px 0;
   text-decoration: none;
-  height: 50px;
+  height: 60px;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 1000;
 }
 
 .navbar > * {
