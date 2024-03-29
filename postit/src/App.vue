@@ -24,7 +24,14 @@
           Login
         </button>
       </router-link>
-      <AvatarPreview v-if="isAuthed" :avatar="userStore.user.avatar"/>
+      <div class="profile-dropdown">
+        <AvatarPreview v-if="isAuthed" :avatar="userStore.user.avatar"/>
+        <div v-if="isAuthed" class="profile-dropdown-content">
+          <button @click="logout">
+            Logout
+          </button>
+        </div>
+      </div>
     </div>
   </div>
   <nav>
@@ -44,9 +51,9 @@ const isAuthed = computed(() => {
   return userStore.user !== null
 })
 
-// function logout() {
-//   userStore.logout()
-// }
+function logout() {
+  userStore.logout()
+}
 </script>
 
 <style lang="scss">
@@ -71,7 +78,7 @@ const isAuthed = computed(() => {
   align-items: center;
   margin: 10px;
   text-decoration: none;
-  max-height: 50px;
+  height: 50px;
 }
 
 .navbar > * {
@@ -108,5 +115,34 @@ button:hover {
 
 .router-link-exact-active button:hover {
   background-color: #808080;
+}
+
+.profile-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  left: -50%;
+}
+
+.profile-dropdown-content button {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.profile-dropdown:hover .profile-dropdown-content {
+  display: block;
+}
+
+.profile-dropdown AvatarPreview {
+  background-color: #f9f9f9;
 }
 </style>
