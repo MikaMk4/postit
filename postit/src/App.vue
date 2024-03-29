@@ -76,6 +76,8 @@ function logout() {
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
+  position: sticky;
+  top: 10px;
   margin: 10px;
   text-decoration: none;
   height: 50px;

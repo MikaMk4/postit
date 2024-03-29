@@ -37,7 +37,7 @@ const isAuthed = computed(() => {
 }
 
 .settings > div {
-    margin: 0 0 100px 0;
+    margin: 0 0 500px 0;
 }
 
 .settings > h1 {
