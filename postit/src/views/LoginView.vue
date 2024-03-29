@@ -27,7 +27,7 @@ const wantsToLogin = ref(true);
 function login(data) {
     if (data.username !== '' && data.password !== '') {
         userStore.login(data.username);
-        router.push({ name: 'home' });
+        router.go(-1);
     } else {
         alert('Cannot leave fields blank.');
     }

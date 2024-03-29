@@ -100,4 +100,13 @@ button a {
 button:hover {
   background-color: #f0f0f0;
 }
+
+.router-link-exact-active button {
+  background-color: #6f6f6f;
+  color: white;
+}
+
+.router-link-exact-active button:hover {
+  background-color: #808080;
+}
 </style>

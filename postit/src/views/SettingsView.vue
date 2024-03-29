@@ -35,4 +35,16 @@ const isAuthed = computed(() => {
     justify-content: center;
     align-items: center;
 }
+
+.settings > div {
+    margin: 0 0 100px 0;
+}
+
+.settings > h1 {
+    margin: 0 0 50px 0;
+}
+
+.settings > * > * {
+    margin: 0 0 20px 0;
+}
 </style>
