@@ -3,7 +3,7 @@
         <h1>Settings</h1>
         <div class="user-settings" v-if="isAuthed">
             <h2>User Settings</h2>
-            <AvatarPreview :avatar="userStore.user.avatar" :height="200" :width="200"/>
+            <AvatarPreview :avatar="userStore.user.avatar" :size="200" :isEditable="true"/>
             <p>{{ userStore.user.name }}</p>
             <h3>Change Username</h3>
             <h3>Change Password</h3>

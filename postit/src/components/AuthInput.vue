@@ -1,6 +1,6 @@
 <template>
     <div class="auth-input">
-        <label for="username">Email</label>
+        <label for="username">Username</label>
         <input type="text" id="username" v-model="username" />
         <label for="password">Password</label>
         <input type="password" id="password" v-model="password" />

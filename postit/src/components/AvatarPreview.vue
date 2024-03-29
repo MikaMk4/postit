@@ -1,7 +1,7 @@
 <template>
-    <div class="avatar">
+    <div class="avatar" :class="{ dim: isEditable }">
         <img :src="avatar" alt="Avatar" class="avatar-img">
-        <img src="../assets/edit.png" alt="Edit" class="edit-icon">
+        <img src="../assets/edit.png" alt="Edit" class="edit-icon" v-if="isEditable">
     </div>
 </template>
 
@@ -14,22 +14,20 @@ const props = defineProps(
             type: String,
             required: true
         },
-        height: {
+        size: {
             type: Number,
-            required: false,
-            default: 100
+            default: 50
         },
-        width: {
-            type: Number,
-            required: false,
-            default: 100
+        isEditable: {
+            type: Boolean,
+            default: false
         }
     }
 )
 
-const aHeight = computed(() => props.height + 'px');
-const aWidth = computed(() => props.width + 'px');
-
+const aSize = computed(
+    () => props.size + 'px'
+);
 </script>
 
 <style>
@@ -39,15 +37,18 @@ const aWidth = computed(() => props.width + 'px');
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
-    width: v-bind(aWidth);
-    height: v-bind(aHeight);
+    width: v-bind(aSize);
+    height: v-bind(aSize);
     overflow: hidden;
     border-radius: 50%;
 }
 
 .avatar:hover .avatar-img {
-    filter: brightness(0.5);
     cursor: pointer;
+}
+
+.dim:hover .avatar-img {
+    filter: brightness(0.5);
 }
 
 .avatar-img {
