@@ -1,9 +1,9 @@
 services:
-  postit:
-    image: postit
+  postit-frontend:
+    image: postit-frontend
     build: 
-      context: .
-      dockerfile: ./postit/Dockerfile
+      context: ./postit
+      dockerfile: Dockerfile
     volumes:
       - ./postit:/app
     environment:
@@ -12,7 +12,39 @@ services:
       - 8080:8080
     networks:
       - postit-network
+  postit-api:
+    image: postit-api
+    build: 
+      context: ./postit-api
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=postit-db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=root
+      - DB_NAME=postit
+      - JWT_SECRET=BUXV5WILJK8PbNxUJ7ZLqSEA2wBpOMtnTPWCt7qYDIZUbfiY7FKs2iAF0vZbMEVx
+    ports:
+      - 3000:3000
+    networks:
+      - postit-network
+    depends_on:
+      - postit-db
+  postit-db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=postit
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - postit-network
+    ports:
+      - 3306:3306
 
 networks:
   postit-network:
     driver: bridge
+
+volumes:
+  db-data:
