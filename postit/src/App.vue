@@ -2,20 +2,28 @@
   <div class="navbar">
     <div>
       <h1>PostIt</h1>
-      <button>
-        <router-link :to="{ name: 'home' }">Home</router-link>
-      </button> |
-      <button>
-        <router-link :to="{ name: 'about' }">About</router-link>
-      </button> |
-      <button>
-        <router-link :to="{ name: 'settings' }">Settings</router-link>
-      </button>
+      <router-link :to="{ name: 'home' }">
+        <button>
+          Home
+        </button>
+      </router-link>
+      <router-link :to="{ name: 'about' }">
+        <button>
+          About
+        </button>
+      </router-link>
+      <router-link :to="{ name: 'settings' }">
+        <button>
+          Settings
+        </button>
+      </router-link>
     </div>
     <div>
-      <button v-if="!isAuthed">
-        <router-link :to="{ name: 'login' }">Login</router-link>
-      </button>
+      <router-link :to="{ name: 'login' }">
+        <button v-if="!isAuthed">
+          Login
+        </button>
+      </router-link>
       <AvatarPreview v-if="isAuthed" :avatar="userStore.user.avatar"/>
     </div>
   </div>
