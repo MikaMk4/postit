@@ -17,6 +17,11 @@
           Settings
         </button>
       </router-link>
+      <router-link :to="{ name: 'boards' }">
+        <button>
+          Boards
+        </button>
+      </router-link>
     </div>
     <div>
       <router-link :to="{ name: 'login' }">
@@ -34,9 +39,7 @@
       </div>
     </div>
   </div>
-  <nav>
-    
-  </nav>
+
   <router-view/>
 </template>
 

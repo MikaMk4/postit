@@ -37,6 +37,10 @@ export default {
 
 .mini-post:hover {
     background-color: #f9f9f9;
+    cursor: pointer;
 }
 
+.mini-post > * {
+    margin: 0.5rem;
+}
 </style>

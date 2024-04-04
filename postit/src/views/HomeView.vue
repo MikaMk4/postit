@@ -42,6 +42,10 @@ const posts = ref(
   justify-content: center;
 }
 
+.home * {
+  margin: 0.5rem;
+}
+
 .posts {
   display: flex;
   flex-flow: row wrap;

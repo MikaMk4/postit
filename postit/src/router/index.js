@@ -16,7 +16,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
   },
   {
-    path: '/post:id',
+    path: '/post/:id',
     name: 'post',
     component: () => import('../views/PostView.vue')
   },
@@ -29,6 +29,21 @@ const routes = [
     path: '/settings',
     name: 'settings',
     component: () => import('../views/SettingsView.vue')
+  },
+  {
+    path: '/boards',
+    name: 'boards',
+    component: () => import('../views/BoardListView.vue')
+  },
+  {
+    path: '/b/:id',
+    name: 'board',
+    component: () => import('../views/BoardView.vue')
+  },
+  {
+    path: '/b/:id/create',
+    name: 'create-post',
+    component: () => import('../views/PostCreateView.vue')
   }
 ]
 
