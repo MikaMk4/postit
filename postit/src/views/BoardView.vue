@@ -1,4 +1,7 @@
 <template>
+    <router-link :to="{ name: 'edit-board', params: { id: board.id } }">
+        <button>Edit this Board</button>
+    </router-link>
     <div class="board">
         <h1>{{ board.title }}</h1>
         <div class="postCreator">

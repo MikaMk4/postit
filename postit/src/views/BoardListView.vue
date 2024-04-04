@@ -1,6 +1,11 @@
 <template>
     <div class="board-list">
         <h1>Boards</h1>
+        <div class="board-creator">
+            <RouterLink :to="{ name: 'create-board', params: { } }">
+                <button>Create a Board</button>
+            </RouterLink>
+        </div>
         <div class="boards">
             <MiniBoard v-for="board in boards" :key="board.id" :board="board" />
         </div>

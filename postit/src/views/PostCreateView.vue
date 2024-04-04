@@ -6,7 +6,7 @@
         <input type="text" id="title" v-model="title" />
         <label for="content">Content</label>
         <textarea id="content" v-model="content"></textarea>
-        <button type="submit" :disabled="!isCreatable">Create Post</button>
+        <button type="submit" :disabled="!isCreatable">Publish to {{ boardName }}</button>
         </form>
     </div>
 </template>
@@ -30,6 +30,7 @@ const titleInput = ref(null)
 const title = ref('')
 const content = ref('')
 const isCreatable = computed(() => title.value.length > 0 && content.value.length > 0)
+const boardName = computed(() => 'First Board')
 
 function submitForm() {
     console.log('Title:', title.value)
@@ -72,6 +73,7 @@ onMounted(() => {
 
 #content {
     height: 10rem;
+    resize: vertical;
 }
 
 .post-create button {

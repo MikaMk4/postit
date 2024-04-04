@@ -1,6 +1,6 @@
 <template>
     <div class="login-view">
-        <div v-if="!loading">
+        <div>
             <div class="login" v-if="wantsToLogin">
                 <h1>Login</h1>
                 <AuthInput @submit="login" submitText="Login"/>
@@ -12,7 +12,7 @@
                 <p>Already have an account? <br><a @click="toggleLogin(true)">Login</a></p>
             </div>
         </div>
-        <div class="loader" v-else>
+        <div class="loader" v-if="loading">
 
         </div>
     </div>
@@ -82,8 +82,13 @@ onBeforeMount(() => {
     width: 250px;
 }
 
+.login > * {
+    margin: 0.5rem;
+}
+
 .login a {
     cursor: pointer;
+    color: blue;
 }
 
 .loader {
@@ -92,6 +97,7 @@ onBeforeMount(() => {
   border-radius: 50%;
   width: 120px;
   height: 120px;
+  margin: 2rem auto;
   animation: spin 2s linear infinite;
 }
 

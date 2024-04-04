@@ -49,6 +49,16 @@ const routes = [
     path: '/b/:id/create',
     name: 'create-post',
     component: () => import('../views/PostCreateView.vue')
+  },
+  {
+    path: '/create-board',
+    name: 'create-board',
+    component: () => import('../views/BoardCreateView.vue')
+  },
+  {
+    path: '/b/:id/edit',
+    name: 'edit-board',
+    component: () => import('../views/BoardEditView.vue')
   }
 ]
 
