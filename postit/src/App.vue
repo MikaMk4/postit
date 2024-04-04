@@ -1,22 +1,20 @@
 <template>
+  <metainfo>
+    <template v-slot:title="{ content }">
+      {{ content }}
+    </template>
+  </metainfo>
   <div class="navbar">
     <div>
-      <h1>PostIt</h1>
       <router-link :to="{ name: 'home' }">
-        <button>
-          Home
-        </button>
+        <h1>PostIt</h1>
       </router-link>
       <router-link :to="{ name: 'about' }">
         <button>
           About
         </button>
       </router-link>
-      <router-link :to="{ name: 'settings' }">
-        <button>
-          Settings
-        </button>
-      </router-link>
+      
       <router-link :to="{ name: 'boards' }">
         <button>
           Boards
@@ -32,7 +30,12 @@
       <div class="profile-dropdown">
         <AvatarPreview v-if="isAuthed" :avatar="userStore.user.avatar"/>
         <div v-if="isAuthed" class="profile-dropdown-content">
-          <button @click="logout">
+          <router-link :to="{ name: 'settings' }">
+            <button>
+              Settings
+            </button>
+          </router-link>
+          <button @click="logout" id="logout-button">
             Logout
           </button>
         </div>
@@ -44,19 +47,34 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useUserStore } from '@/stores/UserStore.js'
+import { useAppStore } from '@/stores/AppStore.js'
 import AvatarPreview from '@/components/AvatarPreview.vue'
+import { useMeta } from 'vue-meta'
 
 const userStore = useUserStore()
+const appStore = useAppStore()
 
 const isAuthed = computed(() => {
   return userStore.user !== null
 })
 
+useMeta({
+  title: '',
+  htmlAttrs: {
+    lang: 'en',
+    amp: true
+  }
+})
+
 function logout() {
   userStore.logout()
 }
+
+onMounted(() => {
+  appStore.setHistoryCount(window.history.length)
+})
 </script>
 
 <style lang="scss">
@@ -107,22 +125,18 @@ button {
   cursor: pointer;
 }
 
-button a {
+#logout-button {
+  background-color: red;
+  color: white;
+}
+
+a {
   text-decoration: none;
   color: #2c3e50;
 }
 
 button:hover {
   background-color: #f0f0f0;
-}
-
-.router-link-exact-active button {
-  background-color: #6f6f6f;
-  color: white;
-}
-
-.router-link-exact-active button:hover {
-  background-color: #808080;
 }
 
 .profile-dropdown {
@@ -142,8 +156,10 @@ button:hover {
 .profile-dropdown-content button {
   color: black;
   padding: 12px 16px;
-  text-decoration: none;
+  border-radius: 0%;
+  border: none;
   display: block;
+  width: 100%;
 }
 
 .profile-dropdown:hover .profile-dropdown-content {

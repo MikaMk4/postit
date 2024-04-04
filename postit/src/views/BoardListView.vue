@@ -10,6 +10,15 @@
 <script setup>
 import { ref } from 'vue'
 import MiniBoard from '@/components/MiniBoard.vue'
+import { useMeta } from 'vue-meta'
+
+useMeta({
+    title: 'Boards',
+    htmlAttrs: {
+        lang: 'en',
+        amp: true
+    }
+})
 
 const boards = ref(
     [

@@ -15,6 +15,15 @@
 <script setup>
 import { ref } from 'vue'
 import MiniPost from '@/components/MiniPost.vue'
+import { useMeta } from 'vue-meta'
+
+useMeta({
+  title: 'Board',
+  htmlAttrs: {
+    lang: 'en',
+    amp: true
+  }
+})
 
 const board = ref(
     {
@@ -40,3 +49,11 @@ const board = ref(
     }
 )
 </script>
+
+<style>
+.posts {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+</style>

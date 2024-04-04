@@ -1,37 +1,69 @@
 <template>
     <div class="login-view">
-        <div class="login" v-if="wantsToLogin">
-            <h1>Login</h1>
-            <AuthInput @submit="login" submitText="Login"/>
-            <p>Don't have an account? <br><a @click="wantsToLogin = false">Sign up</a></p>
+        <div v-if="!loading">
+            <div class="login" v-if="wantsToLogin">
+                <h1>Login</h1>
+                <AuthInput @submit="login" submitText="Login"/>
+                <p>Don't have an account? <br><a @click="toggleLogin(false)">Sign up</a></p>
+            </div>
+            <div class="login" v-else>
+                <h1>Sign In</h1>
+                <AuthInput submitText="Sign In" />
+                <p>Already have an account? <br><a @click="toggleLogin(true)">Login</a></p>
+            </div>
         </div>
-        <div class="login" v-else>
-            <h1>Sign In</h1>
-            <AuthInput submitText="Sign In" />
-            <p>Already have an account? <br><a @click="wantsToLogin = true">Login</a></p>
+        <div class="loader" v-else>
+
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import AuthInput from '@/components/AuthInput.vue'
 import { useUserStore } from '@/stores/UserStore.js'
+import { useAppStore } from '@/stores/AppStore.js'
+import { useMeta } from 'vue-meta'
 
 const router = useRouter();
 const userStore = useUserStore();
+const appStore = useAppStore();
 
 const wantsToLogin = ref(true);
+const loading = ref(false);
 
-function login(data) {
+useMeta({
+  title: 'Login',
+  htmlAttrs: {
+    lang: 'en',
+    amp: true
+  }
+})
+
+function toggleLogin(value) {
+    wantsToLogin.value = value;
+}
+
+async function login(data) {
     if (data.username !== '' && data.password !== '') {
-        userStore.login(data.username);
+        loading.value = true;
+        await userStore.login(data.username);
+        loading.value = false;
         router.go(-1);
     } else {
         alert('Cannot leave fields blank.');
     }
 }
+
+onBeforeMount(() => {
+    if (userStore.user !== null) {
+        if (window.history.length <= appStore.historyCount)
+            router.push({ name: 'home' });
+        else
+            router.go(-1);
+    }
+});
 </script>
 
 <style>
@@ -52,5 +84,19 @@ function login(data) {
 
 .login a {
     cursor: pointer;
+}
+
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>

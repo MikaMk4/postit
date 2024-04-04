@@ -14,6 +14,15 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useMeta } from 'vue-meta'
+
+useMeta({
+    title: 'Create Post',
+    htmlAttrs: {
+        lang: 'en',
+        amp: true
+    }
+})
 
 const router = useRouter()
 const titleInput = ref(null)
@@ -59,6 +68,10 @@ onMounted(() => {
 .post-create input, .post-create textarea {
     padding: 0.5rem;
     margin: 0.5rem;
+}
+
+#content {
+    height: 10rem;
 }
 
 .post-create button {
