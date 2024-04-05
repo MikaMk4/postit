@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { onMounted, watch } from 'vue'
+import { onBeforeMount, onMounted, watch } from 'vue'
 import { useAppStore } from '@/stores/AppStore.js'
 import TopBar from '@/components/TopBar.vue'
 import { useMeta } from 'vue-meta'
@@ -27,12 +27,14 @@ useMeta({
   }
 })
 
-onMounted(() => {
-  appStore.setHistoryCount(window.history.length)
-
+onBeforeMount(() => {
   if (appStore.darkMode) {
     document.documentElement.classList.add('dark-theme')
   }
+})
+
+onMounted(() => {
+  appStore.setHistoryCount(window.history.length)
 })
 
 watch(() => appStore.darkMode, (value) => {

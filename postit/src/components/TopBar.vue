@@ -24,7 +24,7 @@
                     Login
                 </button>
             </router-link>
-            <div class="profile-dropdown" v-else>
+            <div v-else>
                 <AvatarPreview :avatar="userStore.user.avatar" :pId="userStore.user.id"/>
             </div>
         </div>
