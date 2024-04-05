@@ -17,9 +17,7 @@
         </div>
         <div class="right-nav">
             <router-link :to="{ name: 'settings' }">
-                <button>
-                    Settings
-                </button>
+              <i class="fa fa-gear" id="settings-button"></i>
             </router-link>
             <router-link :to="{ name: 'login' }" v-if="!isAuthed">
                 <button>
@@ -114,5 +112,26 @@ function logout() {
 
 .profile-dropdown:hover .profile-dropdown-content {
   display: block;
+}
+
+#settings-button {
+  font-size: 2.2rem;
+  color: var(--text-primary-color);
+  border: none;
+}
+
+#settings-button:hover {
+  background-color: transparent;
+  color: var(--accent-color-active);
+  animation: settings-button-animation .5s;
+}
+
+@keyframes settings-button-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
