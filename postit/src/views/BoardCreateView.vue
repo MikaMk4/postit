@@ -36,8 +36,7 @@ function createBoard() {
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: 50rem;
 }
 
 .board-create * {

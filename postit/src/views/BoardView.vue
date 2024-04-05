@@ -1,9 +1,9 @@
 <template>
-    <router-link :to="{ name: 'edit-board', params: { id: board.id } }">
-        <button>Edit this Board</button>
-    </router-link>
     <div class="board">
         <h1>{{ board.title }}</h1>
+        <router-link :to="{ name: 'edit-board', params: { id: board.id } }">
+            <button>Edit this Board</button>
+        </router-link>
         <div class="postCreator">
             <RouterLink :to="{ name: 'create-post' }">
                 <button>Create a Post</button>
@@ -54,6 +54,16 @@ const board = ref(
 </script>
 
 <style>
+.board {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+}
+
+.board > * {
+    margin: 0.5rem;
+}
+
 .posts {
     display: flex;
     flex-flow: row wrap;

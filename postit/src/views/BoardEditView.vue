@@ -44,8 +44,7 @@ function submitForm() {
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: 50rem;
 }
 
 .board-edit * {
@@ -66,7 +65,7 @@ function submitForm() {
 .board-edit input, .board-edit textarea {
     padding: 0.5rem;
     margin: 0.5rem;
-    border: 1px solid var(--accent-color);
+    border: 0.1rem solid var(--accent-color);
     border-radius: 0.25rem;
     background-color: var(--background-color-secondary);
     color: var(--text-primary-color);

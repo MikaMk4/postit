@@ -16,17 +16,17 @@
             </router-link>
         </div>
         <div class="right-nav">
-            <router-link :to="{ name: 'login' }">
-                <button v-if="!isAuthed">
-                    Login
-                </button>
-            </router-link>
             <router-link :to="{ name: 'settings' }">
                 <button>
                     Settings
                 </button>
             </router-link>
-            <div class="profile-dropdown" v-if="isAuthed">
+            <router-link :to="{ name: 'login' }" v-if="!isAuthed">
+                <button>
+                    Login
+                </button>
+            </router-link>
+            <div class="profile-dropdown" v-else>
                 <AvatarPreview :avatar="userStore.user.avatar"/>
                 <div class="profile-dropdown-content">
                     <button @click="logout" id="logout-button">
@@ -62,9 +62,9 @@ function logout() {
   align-items: center;
   position: sticky;
   top: 0;
-  padding: 10px 0;
+  padding: 0.5rem 0;
   text-decoration: none;
-  height: 60px;
+  height: 4rem;
   width: 100%;
   background-color: var(--background-color-secondary);
   z-index: 1000;
@@ -77,20 +77,16 @@ function logout() {
 }
 
 .left-nav > * {
-  margin-left: 20px;
+  margin-left: 1.25rem;
 }
 
 .right-nav > * {
-  margin-right: 20px;
+  margin-right: 1.25rem;
 }
 
 #logout-button {
-  background-color: red;
-  color: white;
-}
-
-#logout-button:hover {
-  background-color: darkred;
+  color: red;
+  font-weight: bold;
 }
 
 .profile-dropdown {
@@ -102,14 +98,15 @@ function logout() {
   display: none;
   position: absolute;
   background-color: var(--background-color-secondary);
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0 0.5rem 1rem 0 rgba(0,0,0,0.2);
   z-index: 1;
   left: -50%;
 }
 
 .profile-dropdown-content button {
-  padding: 12px 16px;
+  padding: 0.75rem 1rem;
   border-radius: 0%;
+  overflow: hidden;
   border: none;
   display: block;
   width: 100%;

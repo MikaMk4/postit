@@ -8,7 +8,7 @@
             </div>
             <div class="login" v-else>
                 <h1>Sign Up</h1>
-                <AuthInput submitText="Sign In" />
+                <AuthInput submitText="Sign Up" />
                 <p>Already have an account? <br><a @click="toggleLogin(true)">Login</a></p>
             </div>
         </div>
@@ -75,10 +75,10 @@ onBeforeMount(() => {
 }
 
 .login {
-    border: 1px solid var(--accent-color);
-    border-radius: 5px;
-    padding: 10px;
-    width: 250px;
+    border: 0.1rem solid var(--accent-color);
+    border-radius: 0.4rem;
+    padding: 0.6rem;
+    width: 16rem;
     background-color: var(--background-color-secondary);
 }
 
@@ -92,11 +92,11 @@ onBeforeMount(() => {
 }
 
 .loader {
-  border: 16px solid var(--background-color-secondary);
-  border-top: 16px solid var(--accent-color);
+  border: 1rem solid var(--background-color-secondary);
+  border-top: 1rem solid var(--accent-color);
   border-radius: 50%;
-  width: 120px;
-  height: 120px;
+  width: 7.5rem;
+  height: 7.5rem;
   margin: 2rem auto;
   animation: spin 2s linear infinite;
 }

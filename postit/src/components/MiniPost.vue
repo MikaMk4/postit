@@ -28,11 +28,11 @@ export default {
 
 <style>
 .mini-post {
-    border: 1px solid var(--accent-color);
-    border-radius: 5px;
-    margin: 10px;
-    padding: 10px;
-    width: 200px;
+    border: 0.1rem solid var(--accent-color);
+    border-radius: 0.4rem;
+    margin: 1rem;
+    padding: 1rem;
+    width: 20rem;
 }
 
 .mini-post:hover {

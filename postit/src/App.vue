@@ -112,7 +112,6 @@ button:disabled:hover {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
 }
 
 * {
@@ -131,6 +130,7 @@ body {
 }
 
 .router-view {
-  margin: 50px 0;
+  margin: 3rem auto;
+  width: 80%;
 }
 </style>

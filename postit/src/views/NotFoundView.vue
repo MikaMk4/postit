@@ -23,6 +23,5 @@ useMeta({
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 </style>

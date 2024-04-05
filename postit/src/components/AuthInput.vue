@@ -5,7 +5,7 @@
             <input type="text" id="username" v-model="username" />
             <label for="password">Password</label>
             <input type="password" id="password" v-model="password" />
-            <button @click="submit">{{ props.submitText }}</button>
+            <button>{{ props.submitText }}</button>
         </form>
     </div>
 </template>
@@ -45,8 +45,6 @@ onMounted(() => {
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
-    max-width: 800px;
-    margin: 0 auto;
 }
 
 .auth-input * {
