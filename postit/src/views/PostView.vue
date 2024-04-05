@@ -166,12 +166,7 @@ function deletePost() {
 }
 
 .like-container > i.liked:hover {
-    color: grey;
     cursor: pointer;
-}
-
-.like-container > i.liked:hover.animated {
-    animation: unlike-animation 0.5s forwards;
 }
 
 @keyframes like-animation {
@@ -183,15 +178,6 @@ function deletePost() {
     }
     100% {
         transform: scale(1);
-    }
-}
-
-@keyframes unlike-animation {
-    0% {
-        transform: translate(0, 0) rotate(0);
-    }
-    100% {
-        transform: translate(5px, 5px) rotate(5deg);
     }
 }
 

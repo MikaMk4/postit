@@ -2,7 +2,7 @@
     <div class="profile">
         <h1>Profile</h1>
         <div class="profile-info">
-            <AvatarPreview :avatar="userStore.user.avatar" :size="15" :expandable="true"/>
+            <AvatarPreview :avatar="userStore.user.avatar" :size="10" :expandable="true"/>
             <div class="profile-info-text">
                 <p>Username</p>
                 <p>Bio</p>

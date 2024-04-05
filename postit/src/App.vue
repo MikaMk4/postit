@@ -63,7 +63,6 @@ watch(() => appStore.darkMode, (value) => {
   :root {
     font-size: 12px;
   }
-  
 }
 
 /* Define styles for the root window with dark - mode preference */
@@ -132,6 +131,6 @@ body {
 
 .router-view {
   margin: 3rem auto;
-  width: 80%;
+  max-width: 80%;
 }
 </style>

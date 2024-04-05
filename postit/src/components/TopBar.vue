@@ -4,11 +4,6 @@
             <router-link :to="{ name: 'home' }">
                 <h1>PostIt</h1>
             </router-link>
-            <router-link :to="{ name: 'about' }">
-                <button>
-                    About
-                </button>
-            </router-link>
             <router-link :to="{ name: 'boards' }">
                 <button>
                     Boards
