@@ -55,7 +55,15 @@ watch(() => appStore.darkMode, (value) => {
   --accent-color-active: #a0a0a0;
   --accent-color-inactive: #d0d0d0;
   --text-primary-color: #222;
-  --element-size: 4rem;
+  
+  font-size: 16px;
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    font-size: 12px;
+  }
+  
 }
 
 /* Define styles for the root window with dark - mode preference */

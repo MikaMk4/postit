@@ -24,7 +24,7 @@ const props = defineProps(
         },
         size: {
             type: Number,
-            default: 50
+            default: 3.125
         },
         isEditable: {
             type: Boolean,
@@ -50,7 +50,7 @@ const clickable = computed(
 );
 
 const aSize = computed(
-    () => props.size + 'px'
+    () => props.size + 'rem'
 );
 </script>
 

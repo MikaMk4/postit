@@ -14,11 +14,15 @@
         </div>
         <div class="user-settings" v-if="isAuthed">
             <h2>User Settings</h2>
-            <AvatarPreview :avatar="userStore.user.avatar" :size="200" :isEditable="true" @changeAvatar="changeAvatar"/>
-            <form>
+            <AvatarPreview :avatar="userStore.user.avatar" :size="15" :isEditable="true" @changeAvatar="changeAvatar"/>
+            <form @submit.prevent="newUserInfoSet">
                 <div>
-                    <label for="username">New Username</label>
+                    <label for="username">Username</label>
                     <input type="text" id="username" v-model="userStore.user.name" />
+                </div>
+                <div>
+                    <label for="bio">About me</label>
+                    <textarea id="bio" v-model="userStore.user.bio"></textarea>
                 </div>
                 <div>
                     <label for="password">New Password</label>
@@ -131,6 +135,7 @@ function logout() {
     display: flex;
     flex-flow: column nowrap;
     align-items: flex-start;
+    width: 75%;
 }
 
 .user-settings > form > div {
@@ -140,6 +145,7 @@ function logout() {
     border: 0.1rem solid var(--accent-color);
     border-radius: 0.25rem;
     padding: 1rem;
+    width: 100%;
 }
 
 .user-settings > form > div > label {
@@ -154,6 +160,17 @@ function logout() {
     border-radius: 0.25rem;
     background-color: var(--background-color-secondary);
     color: var(--text-primary-color);
+}
+
+.user-settings > form > div > textarea {
+    padding: 0.5rem;
+    margin: 0.5rem;
+    border: 0.1rem solid var(--accent-color);
+    border-radius: 0.25rem;
+    background-color: var(--background-color-secondary);
+    color: var(--text-primary-color);
+    resize: vertical;
+    min-height: 8rem;
 }
 
 .user-settings > form > button {

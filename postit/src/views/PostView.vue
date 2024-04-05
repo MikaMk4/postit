@@ -1,7 +1,11 @@
 <template>
     <div class="post-view">
         <div class="post">
-            <h1>{{ post.title }}</h1>
+            <div class="post-header">
+                <AvatarPreview :avatar="userStore.user.avatar" :size="2" :animationsEnabled="appStore.animationsEnabled" :pId="userStore.user.id"/>
+                <h3>{{ userStore.user.name }}</h3>
+                <h1>{{ post.title }}</h1>
+            </div>
             <div class="options-container">
                 <div class="like-container">
                     <i class="fa fa-heart" :class="{ liked: isLiked, animated: appStore.animationsEnabled }" @click="toggleLike"></i>
@@ -11,14 +15,16 @@
                     <i class="fa fa-trash" :class="{ animated: appStore.animationsEnabled }" @click="deletePost"></i>
                 </div>
             </div>
-            <p>{{ post.content }}</p>
+            <div class="post-content-container">
+                <p>{{ post.content }}</p>
+            </div>
         </div>
         <div class="comment-container">
             <h2>Comments</h2>
             <div class="comments">
                 <div v-for="comment in comments" :key="comment.id">
                     <span>
-                        <AvatarPreview :avatar="comment.author.avatar" :size="40"/>
+                        <AvatarPreview :avatar="comment.author.avatar" :size="2" :animationsEnabled="appStore.animationsEnabled" :pId="comment.authorId"/>
                         <h3>{{ comment.author.name }}</h3>
                     </span>
                     <p>{{ comment.content }}</p>
@@ -41,14 +47,14 @@ const appStore = useAppStore()
 const post = ref({
     authorId: '1',
     title: 'Post Title',
-    content: 'Post Content',
+    content: 'Exercitation velit esse amet laboris dolor in. Ut consequat dolore duis veniam dolor elit ut ipsum. Ipsum commodo deserunt velit consectetur non elit consequat laboris excepteur sint mollit qui.',
     likes: 12
 })
 
 const comments = ref([
-    { id: 1, content: 'Comment 1', author: { name: 'Author 1', avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYloKopOZ_oudmWTNK-xVmdVPxdKsgKniHbr8Vr0hk1g&s' } },
-    { id: 2, content: 'Comment 2', author: { name: 'Author 2', avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYloKopOZ_oudmWTNK-xVmdVPxdKsgKniHbr8Vr0hk1g&s' } },
-    { id: 3, content: 'Comment 3', author: { name: 'Author 3', avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYloKopOZ_oudmWTNK-xVmdVPxdKsgKniHbr8Vr0hk1g&s' } }
+    { id: 1, content: 'Comment 1', authorId: '2', author: { name: 'Author 1', avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYloKopOZ_oudmWTNK-xVmdVPxdKsgKniHbr8Vr0hk1g&s' } },
+    { id: 2, content: 'Comment 2', authorId: '3', author: { name: 'Author 2', avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYloKopOZ_oudmWTNK-xVmdVPxdKsgKniHbr8Vr0hk1g&s' } },
+    { id: 3, content: 'Comment 3', authorId: '4', author: { name: 'Author 3', avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYloKopOZ_oudmWTNK-xVmdVPxdKsgKniHbr8Vr0hk1g&s' } }
 ])
 
 useMeta({
@@ -82,7 +88,9 @@ function deletePost() {
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
+    justify-content: center;
     width: 50rem;
+    max-width: 75%;
 }
 
 .post-view > * {
@@ -100,28 +108,44 @@ function deletePost() {
     min-height: 25rem;
 }
 
+.post-header {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: .25rem;
+}
+
+.post-header > h3 {
+    margin-left: 0.5rem;
+}
+
+.post-header > h1 {
+    margin-left: 1rem;
+}
+
 .options-container {
     display: flex;
     flex-flow: row nowrap;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     margin-bottom: 2rem;
 }
 
 .options-container > * {
-    margin: 0 1rem;
+    margin-right: 1rem;
 }
 
 .like-container {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     font-size: 1.5rem;
 }
 
 .like-container > * {
-    margin: 0 0.5rem;
+    margin-right: 0.5rem;
 }
 
 .like-container > i {
@@ -212,6 +236,10 @@ function deletePost() {
     100% {
         transform: translate(0, 0);
     }
+}
+
+.post-content-container {
+    text-align: left;
 }
 
 .comment-container {
