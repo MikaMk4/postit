@@ -2,9 +2,14 @@
     <div class="post-view">
         <div class="post">
             <h1>{{ post.title }}</h1>
-            <div class="like-container">
-                <i class="fa fa-heart" :class="{ liked: isLiked }" @click="toggleLike"></i>
-                <p>{{ post.likes }}</p>
+            <div class="options-container">
+                <div class="like-container">
+                    <i class="fa fa-heart" :class="{ liked: isLiked }" @click="toggleLike"></i>
+                    <p>{{ post.likes }}</p>
+                </div>
+                <div class="delete-post-container" v-if="canDelete">
+                    <i class="fa fa-trash" @click="deletePost"></i>
+                </div>
             </div>
             <p>{{ post.content }}</p>
         </div>
@@ -24,11 +29,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useMeta } from 'vue-meta'
 import AvatarPreview from '@/components/AvatarPreview.vue';
+import { useUserStore } from '@/stores/UserStore.js';
+
+const userStore = useUserStore()
 
 const post = ref({
+    authorId: '1',
     title: 'Post Title',
     content: 'Post Content',
     likes: 12
@@ -53,6 +62,16 @@ const isLiked = ref(false)
 function toggleLike() {
     isLiked.value = !isLiked.value
     post.value.likes += isLiked.value ? 1 : -1
+}
+
+const canDelete = computed(() => {
+    if (userStore.user === null) return false
+
+    return userStore.user.id === post.value.authorId
+})
+
+function deletePost() {
+    console.log('Post deleted')
 }
 </script>
 
@@ -79,12 +98,23 @@ function toggleLike() {
     min-height: 25rem;
 }
 
+.options-container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.options-container > * {
+    margin: 0 1rem;
+}
+
 .like-container {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
     justify-content: center;
-    margin-bottom: 2rem;
     font-size: 1.5rem;
 }
 
@@ -135,6 +165,42 @@ function toggleLike() {
 
 .like-container > p {
     font-weight: bold;
+}
+
+.delete-post-container {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.delete-post-container > i {
+    color: grey;
+    cursor: pointer;
+}
+
+.delete-post-container > i:hover {
+    color: red;
+    animation: delete-animation 0.1s forwards linear;
+}
+
+@keyframes delete-animation {
+    0% {
+        transform: translate(0, 0);
+    }
+    25% {
+        transform: translate(0.1rem, 0);
+    }
+    50% {
+        transform: translate(0, 0);
+    }
+    75% {
+        transform: translate(-0.1rem, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
 }
 
 .comment-container {
