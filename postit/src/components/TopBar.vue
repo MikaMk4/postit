@@ -17,7 +17,7 @@
         </div>
         <div class="right-nav">
             <router-link :to="{ name: 'settings' }">
-              <i class="fa fa-gear" id="settings-button"></i>
+              <i class="fa fa-gear" :class="{ animated: appStore.animationsEnabled }" id="settings-button"></i>
             </router-link>
             <router-link :to="{ name: 'login' }" v-if="!isAuthed">
                 <button>
@@ -35,8 +35,10 @@
 import { computed } from 'vue'
 import AvatarPreview from '@/components/AvatarPreview.vue'
 import { useUserStore } from '@/stores/UserStore.js'
+import { useAppStore } from '@/stores/AppStore.js'
 
 const userStore = useUserStore()
+const appStore = useAppStore()
 
 const isAuthed = computed(() => {
   return userStore.user !== null
@@ -85,8 +87,10 @@ const isAuthed = computed(() => {
 }
 
 #settings-button:hover {
-  background-color: transparent;
   color: var(--accent-color-active);
+}
+
+#settings-button.animated:hover {
   animation: settings-button-animation .5s;
 }
 

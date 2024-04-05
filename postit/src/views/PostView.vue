@@ -4,11 +4,11 @@
             <h1>{{ post.title }}</h1>
             <div class="options-container">
                 <div class="like-container">
-                    <i class="fa fa-heart" :class="{ liked: isLiked }" @click="toggleLike"></i>
+                    <i class="fa fa-heart" :class="{ liked: isLiked, animated: appStore.animationsEnabled }" @click="toggleLike"></i>
                     <p>{{ post.likes }}</p>
                 </div>
                 <div class="delete-post-container" v-if="canDelete">
-                    <i class="fa fa-trash" @click="deletePost"></i>
+                    <i class="fa fa-trash" :class="{ animated: appStore.animationsEnabled }" @click="deletePost"></i>
                 </div>
             </div>
             <p>{{ post.content }}</p>
@@ -33,8 +33,10 @@ import { computed, ref } from 'vue'
 import { useMeta } from 'vue-meta'
 import AvatarPreview from '@/components/AvatarPreview.vue';
 import { useUserStore } from '@/stores/UserStore.js';
+import { useAppStore } from '@/stores/AppStore';
 
 const userStore = useUserStore()
+const appStore = useAppStore()
 
 const post = ref({
     authorId: '1',
@@ -133,12 +135,18 @@ function deletePost() {
 .like-container > i:hover:not(.liked) {
     color: red;
     cursor: pointer;
-    animation: like-animation 0.5s;
+}
+
+.like-container > i:hover:not(.liked).animated {
+    animation: like-animation 0.5s forwards;
 }
 
 .like-container > i.liked:hover {
     color: grey;
     cursor: pointer;
+}
+
+.like-container > i.liked:hover.animated {
     animation: unlike-animation 0.5s forwards;
 }
 
@@ -182,6 +190,9 @@ function deletePost() {
 
 .delete-post-container > i:hover {
     color: red;
+}
+
+.delete-post-container > i:hover.animated {
     animation: delete-animation 0.1s forwards linear;
 }
 

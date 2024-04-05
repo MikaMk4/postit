@@ -6,6 +6,7 @@ export const useAppStore = defineStore("appStore", {
     state: () => ({
         historyCount: 0,
         darkMode: ref(false),
+        animationsEnabled: ref(true),
     }),
     actions: {
         setHistoryCount(count) {

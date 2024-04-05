@@ -1,5 +1,5 @@
 <template>
-    <div class="avatar" :class="{ dim: isEditable, expandable: clickable }">
+    <div class="avatar" :class="{ dim: isEditable, expandable: clickable, animated: appStore.animationsEnabled }">
         <router-link v-if="clickable" :to="{ name: 'user', params: { id: pId } }">
             <img :src="avatar" alt="Avatar" class="avatar-img">
         </router-link>
@@ -12,6 +12,9 @@
 
 <script setup>
 import { defineProps, computed } from 'vue';
+import { useAppStore } from '@/stores/AppStore';
+
+const appStore = useAppStore();
 
 const props = defineProps(
     {
@@ -66,6 +69,9 @@ const aSize = computed(
 
 .avatar.expandable:hover {
     cursor: pointer;
+}
+
+.avatar.expandable.animated:hover {
     animation: expand-animation 0.25s forwards;
 }
 

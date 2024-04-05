@@ -8,8 +8,8 @@
                 <ToggleSwitch v-model="isDarkMode" />
             </div>
             <div>
-                <h3>Setting 2</h3>
-                <ToggleSwitch />
+                <h3>Enable Animations</h3>
+                <ToggleSwitch v-model="animationsEnabled"/>
             </div>
             <div>
                 <h3>This is a super long text for setting 3</h3>
@@ -62,6 +62,15 @@ const isDarkMode = computed({
     },
     set(value) {
         appStore.darkMode = value;
+    }
+});
+
+const animationsEnabled = computed({
+    get() {
+        return appStore.animationsEnabled;
+    },
+    set(value) {
+        appStore.animationsEnabled = value;
     }
 });
 
