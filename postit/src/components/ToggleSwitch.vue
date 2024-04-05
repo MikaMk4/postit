@@ -1,9 +1,15 @@
 <template>
     <label class="switch">
-        <input type="checkbox">
+        <input type="checkbox" v-model="isActive">
         <span class="slider round"></span>
     </label>
 </template>
+
+<script setup>
+import { defineModel } from 'vue';
+
+const isActive = defineModel()
+</script>
 
 <style>
  /* The switch - the box around the slider */

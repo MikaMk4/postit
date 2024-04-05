@@ -7,7 +7,7 @@
                 <p>Don't have an account? <br><a @click="toggleLogin(false)">Sign up</a></p>
             </div>
             <div class="login" v-else>
-                <h1>Sign In</h1>
+                <h1>Sign Up</h1>
                 <AuthInput submitText="Sign In" />
                 <p>Already have an account? <br><a @click="toggleLogin(true)">Login</a></p>
             </div>
@@ -75,11 +75,11 @@ onBeforeMount(() => {
 }
 
 .login {
-    border: 1px solid #ccc;
+    border: 1px solid var(--accent-color);
     border-radius: 5px;
-    margin: 10px;
     padding: 10px;
     width: 250px;
+    background-color: var(--background-color-secondary);
 }
 
 .login > * {
@@ -92,8 +92,8 @@ onBeforeMount(() => {
 }
 
 .loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
+  border: 16px solid var(--background-color-secondary);
+  border-top: 16px solid var(--accent-color);
   border-radius: 50%;
   width: 120px;
   height: 120px;

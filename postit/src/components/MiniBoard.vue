@@ -31,7 +31,7 @@ const miniBoardClicked = () => {
 
 <style>
 .mini-board {
-    border: 1px solid #ccc;
+    border: 1px solid var(--accent-color);
     border-radius: 5px;
     margin: 10px;
     padding: 10px;
@@ -39,7 +39,7 @@ const miniBoardClicked = () => {
 }
 
 .mini-board:hover {
-    background-color: #f9f9f9;
+    background-color: var(--accent-color);
     cursor: pointer;
 }
 

@@ -1,6 +1,6 @@
 <template>
     <div class="navbar">
-        <div>
+        <div class="left-nav">
             <router-link :to="{ name: 'home' }">
                 <h1>PostIt</h1>
             </router-link>
@@ -15,20 +15,20 @@
                 </button>
             </router-link>
         </div>
-        <div>
+        <div class="right-nav">
             <router-link :to="{ name: 'login' }">
                 <button v-if="!isAuthed">
                     Login
                 </button>
             </router-link>
-            <div class="profile-dropdown">
-                <AvatarPreview v-if="isAuthed" :avatar="userStore.user.avatar"/>
-                <div v-if="isAuthed" class="profile-dropdown-content">
-                    <router-link :to="{ name: 'settings' }">
-                        <button>
-                            Settings
-                        </button>
-                    </router-link>
+            <router-link :to="{ name: 'settings' }">
+                <button>
+                    Settings
+                </button>
+            </router-link>
+            <div class="profile-dropdown" v-if="isAuthed">
+                <AvatarPreview :avatar="userStore.user.avatar"/>
+                <div class="profile-dropdown-content">
                     <button @click="logout" id="logout-button">
                         Logout
                     </button>
@@ -66,7 +66,7 @@ function logout() {
   text-decoration: none;
   height: 60px;
   width: 100%;
-  background-color: #ffffff;
+  background-color: var(--background-color-secondary);
   z-index: 1000;
 }
 
@@ -76,20 +76,12 @@ function logout() {
   align-items: center;
 }
 
-.navbar h1 {
-  margin: 20px;
+.left-nav > * {
+  margin-left: 20px;
 }
 
-.navbar > * > * {
-  margin: 0 10px;
-}
-
-button {
-  background-color: transparent;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
+.right-nav > * {
+  margin-right: 20px;
 }
 
 #logout-button {
@@ -97,13 +89,8 @@ button {
   color: white;
 }
 
-a {
-  text-decoration: none;
-  color: #2c3e50;
-}
-
-button:hover {
-  background-color: #f0f0f0;
+#logout-button:hover {
+  background-color: darkred;
 }
 
 .profile-dropdown {
@@ -114,14 +101,13 @@ button:hover {
 .profile-dropdown-content {
   display: none;
   position: absolute;
-  background-color: #f9f9f9;
+  background-color: var(--background-color-secondary);
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
   left: -50%;
 }
 
 .profile-dropdown-content button {
-  color: black;
   padding: 12px 16px;
   border-radius: 0%;
   border: none;
@@ -131,9 +117,5 @@ button:hover {
 
 .profile-dropdown:hover .profile-dropdown-content {
   display: block;
-}
-
-.profile-dropdown AvatarPreview {
-  background-color: #f9f9f9;
 }
 </style>

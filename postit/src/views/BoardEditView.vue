@@ -6,13 +6,13 @@
         <input type="text" id="title" v-model="title" required />
         <label for="description">Description</label>
         <textarea id="description" v-model="description" required></textarea>
-        <button type="submit">Save</button>
+        <button type="submit" :disabled="!canEdit">Save</button>
         </form>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMeta } from 'vue-meta'
 
@@ -28,6 +28,10 @@ const router = useRouter()
 
 const title = ref('First Board')
 const description = ref('This is the first board on the site.')
+const canEdit = computed(() => {
+    return title.value !== '' && description.value !== ''
+})
+
 function submitForm() {
     console.log('Title:', title.value)
     console.log('Description:', description.value)
@@ -52,53 +56,24 @@ function submitForm() {
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
-    align-items: center;
 }
 
-.board-edit form * {
-    margin: 0.25rem;
-}
-
-.board-edit button {
-    padding: 0.5rem 1rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 0.25rem;
-    cursor: pointer;
-}
-
-.board-edit button:hover {
-    background-color: #0056b3;
+.board-edit label {
+    font-weight: bold;
+    color: var(--text-primary-color);
 }
 
 .board-edit input, .board-edit textarea {
     padding: 0.5rem;
     margin: 0.5rem;
+    border: 1px solid var(--accent-color);
+    border-radius: 0.25rem;
+    background-color: var(--background-color-secondary);
+    color: var(--text-primary-color);
 }
 
-.board-edit textarea {
+#description {
     height: 10rem;
     resize: vertical;
-}
-
-.board-edit label {
-    font-weight: bold;
-}
-
-.board-edit button:active {
-    background-color: #0056b3;
-}
-
-.board-edit button:focus {
-    outline: none;
-}
-
-.board-edit button:disabled {
-    background-color: #ccc;
-}
-
-.board-edit button:disabled:hover {
-    cursor: not-allowed;
 }
 </style>

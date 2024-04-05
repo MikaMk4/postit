@@ -28,7 +28,7 @@ export default {
 
 <style>
 .mini-post {
-    border: 1px solid #ccc;
+    border: 1px solid var(--accent-color);
     border-radius: 5px;
     margin: 10px;
     padding: 10px;
@@ -36,7 +36,7 @@ export default {
 }
 
 .mini-post:hover {
-    background-color: #f9f9f9;
+    background-color: var(--accent-color);
     cursor: pointer;
 }
 

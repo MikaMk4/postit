@@ -64,55 +64,20 @@ onMounted(() => {
 
 .post-create label {
     font-weight: bold;
+    color: var(--text-primary-color);
 }
 
 .post-create input, .post-create textarea {
     padding: 0.5rem;
     margin: 0.5rem;
+    border: 1px solid var(--accent-color);
+    border-radius: 0.25rem;
+    background-color: var(--background-color-secondary);
+    color: var(--text-primary-color);
 }
 
 #content {
     height: 10rem;
     resize: vertical;
-}
-
-.post-create button {
-    padding: 0.5rem;
-    margin: 0.5rem;
-    background-color: #2c3e50;
-    color: white;
-    border: none;
-    border-radius: 0.25rem;
-}
-
-.post-create button:hover {
-    cursor: pointer;
-    background-color: #34495e;
-}
-
-.post-create button:active {
-    background-color: #2c3e50;
-}
-
-.post-create button:focus {
-    outline: none;
-}
-
-.post-create button:disabled {
-    background-color: #ccc;
-    color: #666;
-    cursor: not-allowed;
-}
-
-.post-create button:disabled:hover {
-    background-color: #ccc;
-}
-
-.post-create button:disabled:active {
-    background-color: #ccc;
-}
-
-.post-create button:disabled:focus {
-    outline: none;
 }
 </style>
