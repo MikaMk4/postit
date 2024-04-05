@@ -2,10 +2,14 @@
     <div class="post-create">
         <h1>Create Post</h1>
         <form @submit.prevent="submitForm">
-        <label for="title" ref="titleInput">Title</label>
-        <input type="text" id="title" v-model="title" />
-        <label for="content">Content</label>
-        <textarea id="content" v-model="content"></textarea>
+            <label for="title" ref="titleInput">Title</label>
+            <input type="text" id="title" v-model="title" />
+            
+            <label for="thumbnail">Thumbnail</label>
+            <input type="text" id="thumbnail" v-model="thumbnail" />
+
+            <label for="content">Content</label>
+            <textarea id="content" v-model="content"></textarea>
         <button type="submit" :disabled="!isCreatable">Publish to {{ boardName }}</button>
         </form>
     </div>
@@ -29,6 +33,7 @@ const titleInput = ref(null)
 
 const title = ref('')
 const content = ref('')
+const thumbnail = ref('')
 const isCreatable = computed(() => title.value.length > 0 && content.value.length > 0)
 const boardName = computed(() => 'First Board')
 

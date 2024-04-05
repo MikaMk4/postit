@@ -3,7 +3,7 @@
         <router-link v-if="clickable" :to="{ name: 'user', params: { id: pId } }">
             <img :src="avatar" alt="Avatar" class="avatar-img">
         </router-link>
-        <div v-else>
+        <div v-else @click="editClicked">
             <img :src="avatar" alt="Avatar" class="avatar-img">
             <img src="../assets/edit.png" alt="Edit" class="edit-icon" v-if="isEditable">
         </div>
@@ -33,6 +33,14 @@ const props = defineProps(
         }
     }
 )
+
+const emit = defineEmits(['changeAvatar']);
+
+function editClicked() {
+    if (props.isEditable) {
+        emit('changeAvatar');
+    }
+}
 
 const clickable = computed(
     () => props.pId !== ''
@@ -72,6 +80,7 @@ const aSize = computed(
 
 .dim:hover .avatar-img {
     filter: brightness(0.5);
+    cursor: pointer;
 }
 
 .avatar-img {
@@ -96,5 +105,4 @@ const aSize = computed(
     transform: translate(50%, -50%);
     cursor: pointer;
 }
-
 </style>
