@@ -89,25 +89,13 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button:hover:not(:disabled) {
   background-color: var(--accent-color);
-}
-
-button:active {
-  background-color: var(--accent-color-active);
-}
-
-button:focus {
-  outline: none;
 }
 
 button:disabled {
   color: #666;
   cursor: not-allowed;
-}
-
-button:disabled:hover {
-  background-color: var(--accent-color-inactive);
 }
 
 #app {
