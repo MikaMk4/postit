@@ -1,13 +1,15 @@
 <template>
     <div class="board">
         <h1>{{ board.title }}</h1>
-        <router-link :to="{ name: 'edit-board', params: { id: board.id } }">
-            <button>Edit this Board</button>
-        </router-link>
-        <div class="postCreator">
-            <RouterLink :to="{ name: 'create-post' }">
+        <div>
+            <router-link :to="{ name: 'edit-board', params: { id: board.id } }">
+                <button>Edit this Board</button>
+            </router-link>
+        </div>
+        <div>
+            <router-link :to="{ name: 'create-post' }">
                 <button>Create a Post</button>
-            </RouterLink>
+            </router-link>
         </div>
         <div class="posts">
             <MiniPost v-for="post in board.posts" :key="post.id" :post="post" />

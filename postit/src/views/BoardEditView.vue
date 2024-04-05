@@ -35,7 +35,7 @@ const canEdit = computed(() => {
 function submitForm() {
     console.log('Title:', title.value)
     console.log('Description:', description.value)
-    router.push({ name: 'boards' })
+    router.go(-1)
 }
 </script>
 
