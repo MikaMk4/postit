@@ -22,6 +22,7 @@
             <p>{{ userStore.user.name }}</p>
             <h3>Change Username</h3>
             <h3>Change Password</h3>
+            <button @click="logout">Logout</button>
         </div>
     </div>
 </template>
@@ -49,6 +50,9 @@ const isAuthed = computed(() => {
     return userStore.user !== null;
 });
 
+function logout() {
+    userStore.logout();
+}
 </script>
 
 <style>

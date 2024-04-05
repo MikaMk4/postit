@@ -56,6 +56,11 @@ const routes = [
     path: '/b/:id/edit',
     name: 'edit-board',
     component: () => import('../views/BoardEditView.vue')
+  },
+  {
+    path: '/u/:id',
+    name: 'user',
+    component: () => import('../views/ProfileView.vue')
   }
 ]
 

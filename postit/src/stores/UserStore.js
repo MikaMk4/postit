@@ -27,6 +27,7 @@ export const useUserStore = defineStore('userStore', {
             // }
 
             this.user = {
+                id: '1',
                 name: username,
                 avatar: 'https://cdn.discordapp.com/avatars/452415473687068672/1c6bad1e46a6612c40d20d1ac2f61c7e.webp?size=1024'
             }
@@ -52,6 +53,7 @@ export const useUserStore = defineStore('userStore', {
             // }
 
             this.user = {
+                id: '1',
                 name: username,
                 avatar: 'https://cdn.discordapp.com/avatars/452415473687068672/1c6bad1e46a6612c40d20d1ac2f61c7e.webp?size=1024'
             }

@@ -1,7 +1,12 @@
 <template>
-    <div class="avatar" :class="{ dim: isEditable }">
-        <img :src="avatar" alt="Avatar" class="avatar-img">
-        <img src="../assets/edit.png" alt="Edit" class="edit-icon" v-if="isEditable">
+    <div class="avatar" :class="{ dim: isEditable, expandable: clickable }">
+        <router-link v-if="clickable" :to="{ name: 'user', params: { id: pId } }">
+            <img :src="avatar" alt="Avatar" class="avatar-img">
+        </router-link>
+        <div v-else>
+            <img :src="avatar" alt="Avatar" class="avatar-img">
+            <img src="../assets/edit.png" alt="Edit" class="edit-icon" v-if="isEditable">
+        </div>
     </div>
 </template>
 
@@ -21,9 +26,17 @@ const props = defineProps(
         isEditable: {
             type: Boolean,
             default: false
+        },
+        pId: {
+            type: String,
+            default: ''
         }
     }
 )
+
+const clickable = computed(
+    () => props.pId !== ''
+);
 
 const aSize = computed(
     () => props.size + 'px'
@@ -43,8 +56,18 @@ const aSize = computed(
     border-radius: 50%;
 }
 
-.avatar:hover .avatar-img {
+.avatar.expandable:hover {
     cursor: pointer;
+    animation: expand-animation 0.25s forwards;
+}
+
+@keyframes expand-animation {
+    0% {
+        border-radius: 50%;
+    }
+    100% {
+        border-radius: 25%;
+    }
 }
 
 .dim:hover .avatar-img {

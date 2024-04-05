@@ -25,12 +25,7 @@
                 </button>
             </router-link>
             <div class="profile-dropdown" v-else>
-                <AvatarPreview :avatar="userStore.user.avatar"/>
-                <div class="profile-dropdown-content">
-                    <button @click="logout" id="logout-button">
-                        Logout
-                    </button>
-                </div>
+                <AvatarPreview :avatar="userStore.user.avatar" :pId="userStore.user.id"/>
             </div>
         </div>
     </div>
@@ -46,10 +41,6 @@ const userStore = useUserStore()
 const isAuthed = computed(() => {
   return userStore.user !== null
 })
-
-function logout() {
-  userStore.logout()
-}
 </script>
 
 <style>
@@ -85,33 +76,6 @@ function logout() {
 #logout-button {
   color: red;
   font-weight: bold;
-}
-
-.profile-dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.profile-dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: var(--background-color-secondary);
-  box-shadow: 0 0.5rem 1rem 0 rgba(0,0,0,0.2);
-  z-index: 1;
-  left: -50%;
-}
-
-.profile-dropdown-content button {
-  padding: 0.75rem 1rem;
-  border-radius: 0%;
-  overflow: hidden;
-  border: none;
-  display: block;
-  width: 100%;
-}
-
-.profile-dropdown:hover .profile-dropdown-content {
-  display: block;
 }
 
 #settings-button {
