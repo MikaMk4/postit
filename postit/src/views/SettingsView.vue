@@ -9,9 +9,9 @@
             <h3>Change Password</h3>
         </div>
         <div class="app-settings">
-            <h2>App Settings</h2>
-            <h3>Change Theme</h3>
-            <h3>Change Language</h3>
+            <ToggleSwitch />
+            <ToggleSwitch />
+            <ToggleSwitch />
         </div>
     </div>
 </template>
@@ -19,6 +19,7 @@
 <script setup>
 import { computed } from 'vue';
 import AvatarPreview from '@/components/AvatarPreview.vue';
+import ToggleSwitch from '@/components/ToggleSwitch.vue';
 import { useUserStore } from '@/stores/UserStore.js';
 
 const userStore = useUserStore();
