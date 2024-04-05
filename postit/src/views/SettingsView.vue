@@ -5,15 +5,11 @@
             <h2>App Settings</h2>
             <div>
                 <h3>Dark Mode</h3>
-                <ToggleSwitch v-model="isDarkMode" />
+                <ToggleSwitch v-model="isDarkMode" :animationsEnabled="animationsEnabled" />
             </div>
             <div>
                 <h3>Enable Animations</h3>
-                <ToggleSwitch v-model="animationsEnabled"/>
-            </div>
-            <div>
-                <h3>This is a super long text for setting 3</h3>
-                <ToggleSwitch />
+                <ToggleSwitch v-model="animationsEnabled" :animationsEnabled="animationsEnabled" />
             </div>
         </div>
         <div class="user-settings" v-if="isAuthed">

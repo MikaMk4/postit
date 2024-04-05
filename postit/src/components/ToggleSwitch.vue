@@ -1,12 +1,19 @@
 <template>
     <label class="switch">
-        <input type="checkbox" v-model="isActive">
-        <span class="slider round"></span>
+        <input type="checkbox" v-model="isActive" :class="{ animated: props.animationsEnabled }" />
+        <span class="slider round" :class="{ animated: props.animationsEnabled }"></span>
     </label>
 </template>
 
 <script setup>
 import { defineModel } from 'vue';
+
+const props = defineProps({
+    animationsEnabled: {
+        type: Boolean,
+        default: true
+    }
+})
 
 const isActive = defineModel()
 </script>
@@ -36,6 +43,9 @@ const isActive = defineModel()
   right: 0;
   bottom: 0;
   background-color: #ccc;
+}
+
+.slider.animated {
   -webkit-transition: .2s;
   transition: .2s;
 }
@@ -48,6 +58,9 @@ const isActive = defineModel()
   left: 0.25rem;
   bottom: 0.25rem;
   background-color: white;
+}
+
+.slider.animated:before {
   -webkit-transition: .2s;
   transition: .2s;
 }
