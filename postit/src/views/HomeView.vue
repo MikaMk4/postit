@@ -1,9 +1,9 @@
 <template>
   <div class="home">
     <h1>Home</h1>
-    <p>Welcome to [Your Website Name]!
+    <p>Welcome to PostIt!
 
-Discover a community-driven platform where diverse voices converge, ideas flourish, and discussions thrive. Whether you're seeking insightful conversations, sharing your passions, or exploring new interests, [Your Website Name] is your digital hub for engaging content and meaningful connections.
+Discover a community-driven platform where diverse voices converge, ideas flourish, and discussions thrive. Whether you're seeking insightful conversations, sharing your passions, or exploring new interests, PostIt is your digital hub for engaging content and meaningful connections.
 
 Join our vibrant community and:
 
@@ -13,7 +13,7 @@ Join our vibrant community and:
     Customize your experience by subscribing to your favorite communities and tailoring your feed to your interests.
     Engage with like-minded individuals, forge new friendships, and broaden your horizons in a welcoming and inclusive environment.
 
-At [Your Website Name], we believe in the power of community, the value of diverse perspectives, and the joy of meaningful interactions. Come be a part of something special.
+At PostIt, we believe in the power of community, the value of diverse perspectives, and the joy of meaningful interactions. Come be a part of something special.
 
 Start exploring now!</p>
   </div>

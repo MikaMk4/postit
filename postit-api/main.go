@@ -4,11 +4,16 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/go-sql-driver/mysql"
 )
 
 func main() {
+	fmt.Println("Starting server...")
+	fmt.Println("Waiting for database to start...")
+	time.Sleep(20 * time.Second)
+
 	DB_HOST := os.Getenv("DB_HOST")
 	DB_USER := os.Getenv("DB_USER")
 	DB_PORT := os.Getenv("DB_PORT")
