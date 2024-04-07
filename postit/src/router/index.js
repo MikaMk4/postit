@@ -13,7 +13,7 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/post/:id',
+    path: '/board/:bid/post/:pid',
     name: 'post',
     component: () => import('../views/PostView.vue')
   },

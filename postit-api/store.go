@@ -8,8 +8,12 @@ import (
 
 type Store interface {
 	// Posts
-	GetPosts() ([]Post, error)
+	GetPostsByBoardId(int64) ([]Post, error)
+	GetPostsByUserId(string) ([]Post, error)
+	GetPost(id int64) (*Post, error)
 	CreatePost(post *Post) (*Post, error)
+	UpdatePost(post *Post) (*Post, error)
+	DeletePost(id int64) error
 
 	// Users
 	GetUsers() ([]User, error)
@@ -34,42 +38,6 @@ func NewStorage(db *sql.DB) *Storage {
 	return &Storage{
 		db: db,
 	}
-}
-
-func (s *Storage) GetPosts() ([]Post, error) {
-	rows, err := s.db.Query("SELECT id, title, content FROM posts")
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	posts := []Post{}
-	for rows.Next() {
-		var post Post
-		err := rows.Scan(&post.ID, &post.Title, &post.Content)
-		if err != nil {
-			return nil, err
-		}
-		posts = append(posts, post)
-	}
-
-	return posts, nil
-}
-
-func (s *Storage) CreatePost(post *Post) (*Post, error) {
-	rows, err := s.db.Exec("INSERT INTO posts (title, content) VALUES (?, ?)", post.Title, post.Content)
-
-	if err != nil {
-		return nil, err
-	}
-
-	id, err := rows.LastInsertId()
-	if err != nil {
-		return nil, err
-	}
-
-	post.ID = id
-	return post, nil
 }
 
 func (s *Storage) GetUsers() ([]User, error) {
@@ -172,5 +140,77 @@ func (s *Storage) UpdateBoard(board *Board) (*Board, error) {
 
 func (s *Storage) DeleteBoard(id int64) error {
 	_, err := s.db.Exec("DELETE FROM boards WHERE id = ?", id)
+	return err
+}
+
+func (s *Storage) GetPostsByBoardId(bid int64) ([]Post, error) {
+	rows, err := s.db.Query("SELECT id, title, content, thumbnail, like_count, author_id, board_id FROM posts WHERE board_id = ?", bid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	posts := []Post{}
+	for rows.Next() {
+		var post Post
+		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Thumbnail, &post.LikeCount, &post.AuthorID, &post.BoardID)
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, post)
+	}
+
+	return posts, nil
+}
+
+func (s *Storage) GetPostsByUserId(uid string) ([]Post, error) {
+	rows, err := s.db.Query("SELECT id, title, content, thumbnail, like_count, author_id, board_id FROM posts WHERE author_id = ?", uid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	posts := []Post{}
+	for rows.Next() {
+		var post Post
+		err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Thumbnail, &post.LikeCount, &post.AuthorID, &post.BoardID)
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, post)
+	}
+
+	return posts, nil
+}
+
+func (s *Storage) GetPost(id int64) (*Post, error) {
+	var post Post
+	err := s.db.QueryRow("SELECT title, content, thumbnail, like_count, author_id, board_id FROM posts WHERE id = ?", id).Scan(&post.Title, &post.Content, &post.Thumbnail, &post.LikeCount, &post.AuthorID, &post.BoardID)
+	return &post, err
+}
+
+func (s *Storage) CreatePost(post *Post) (*Post, error) {
+	rows, err := s.db.Exec("INSERT INTO posts (title, content, thumbnail, author_id, board_id) VALUES (?, ?, ?, ?, ?)", post.Title, post.Content, post.Thumbnail, post.AuthorID, post.BoardID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := rows.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	post.ID = id
+	return post, nil
+}
+
+func (s *Storage) UpdatePost(post *Post) (*Post, error) {
+	_, err := s.db.Exec("UPDATE posts SET title = ?, content = ?, author_id = ?, board_id = ?, like_count = ? WHERE id = ?", post.Title, post.Content, post.AuthorID, post.BoardID, post.LikeCount, post.ID)
+	return post, err
+}
+
+func (s *Storage) DeletePost(id int64) error {
+	_, err := s.db.Exec("DELETE FROM posts WHERE id = ?", id)
 	return err
 }

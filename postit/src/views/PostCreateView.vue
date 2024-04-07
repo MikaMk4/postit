@@ -19,6 +19,8 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMeta } from 'vue-meta'
+import { usePostStore } from '@/stores/PostStore'
+import { useBoardStore } from '@/stores/BoardStore';
 
 useMeta({
     title: 'Create Post',
@@ -35,16 +37,32 @@ const title = ref('')
 const content = ref('')
 const thumbnail = ref('')
 const isCreatable = computed(() => title.value.length > 0 && content.value.length > 0)
-const boardName = computed(() => 'First Board')
 
+const boardStore = useBoardStore()
+const boardName = ref('')
+
+const postStore = usePostStore()
 function submitForm() {
-    console.log('Title:', title.value)
-    console.log('Content:', content.value)
+    postStore.createPost({
+        title: title.value,
+        content: content.value,
+        thumbnail: thumbnail.value,
+        boardId: router.currentRoute.value.params.id
+    })
     router.go(-1)
 }
 
 onMounted(() => {
     titleInput.value.focus()
+
+    const id = router.currentRoute.value.params.id
+    boardStore.fetchBoard(id).then((board) => {
+        boardName.value = board.name
+    }).catch((error) => {
+        if (error === "Board not found") {
+            router.push({ name: 'not-found' })
+        }
+    })
 })
 </script>
 

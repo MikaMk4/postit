@@ -36,11 +36,11 @@ func (s *MySqlStorage) Init() (*sql.DB, error) {
 		return nil, err
 	}
 
-	if err := s.createPostsTable(); err != nil {
+	if err := s.createBoardsTable(); err != nil {
 		return nil, err
 	}
 
-	if err := s.createBoardsTable(); err != nil {
+	if err := s.createPostsTable(); err != nil {
 		return nil, err
 	}
 
@@ -64,24 +64,6 @@ func (s *MySqlStorage) createUsersTable() error {
 	return nil
 }
 
-func (s *MySqlStorage) createPostsTable() error {
-	_, err := s.db.Exec(`
-	CREATE TABLE IF NOT EXISTS posts (
-		id INT AUTO_INCREMENT PRIMARY KEY,
-		title VARCHAR(255) NOT NULL,
-		content TEXT NOT NULL,
-		created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		author_id VARCHAR(255) NOT NULL,
-
-		FOREIGN KEY (author_id) REFERENCES users (id)
-	)`)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (s *MySqlStorage) createBoardsTable() error {
 	_, err := s.db.Exec(`
 	CREATE TABLE IF NOT EXISTS boards (
@@ -93,6 +75,28 @@ func (s *MySqlStorage) createBoardsTable() error {
 		creator_id VARCHAR(255) NOT NULL,
 
 		FOREIGN KEY (creator_id) REFERENCES users (id)
+	)`)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *MySqlStorage) createPostsTable() error {
+	_, err := s.db.Exec(`
+	CREATE TABLE IF NOT EXISTS posts (
+		id INT AUTO_INCREMENT PRIMARY KEY,
+		title VARCHAR(255) NOT NULL,
+		content TEXT NOT NULL,
+		thumbnail TEXT,
+		like_count INT NOT NULL DEFAULT 0,
+		created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		author_id VARCHAR(255) NOT NULL,
+		board_id INT NOT NULL,
+
+		FOREIGN KEY (author_id) REFERENCES users (id),
+		FOREIGN KEY (board_id) REFERENCES boards (id)
 	)`)
 	if err != nil {
 		return err

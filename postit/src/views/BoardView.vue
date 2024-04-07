@@ -18,16 +18,17 @@
             </router-link>
         </div>
         <div class="posts">
-            <MiniPost v-for="post in board.posts" :key="post.id" :post="post" />
+            <MiniPost v-for="post in posts" :key="post.id" :post="post" />
         </div>
     </div>
 </template>
 
 <script setup>
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import MiniPost from '@/components/MiniPost.vue'
 import { useMeta } from 'vue-meta'
 import { useBoardStore } from '@/stores/BoardStore';
+import { usePostStore } from '@/stores/PostStore';
 import { useUserStore } from '@/stores/UserStore';
 import { useAppStore } from '@/stores/AppStore';
 import router from '@/router';
@@ -43,18 +44,16 @@ useMeta({
 })
 
 const boardStore = useBoardStore()
-const board = ref({
-    id: '',
-    name: '',
-    posts: []
-})
+const postStore = usePostStore()
 
 const boardId = router.currentRoute.value.params.id
 const boardName = ref('')
 const boardDescription = ref('')
 const creatorId = ref(-1)
 
-onBeforeMount(() => {
+const posts = ref([])
+
+onMounted(async () => {
     const id = router.currentRoute.value.params.id
 
     boardStore.fetchBoard(id).then((board) => {
@@ -65,6 +64,10 @@ onBeforeMount(() => {
         if (error === "Board not found") {
         router.push({ name: 'not-found' })
         }
+    })
+
+    await postStore.fetchPosts(id).then((ps) => {
+        posts.value = posts.value.concat(ps)
     })
 })
 

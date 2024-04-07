@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,12 +19,22 @@ func NewPostService(store Store) *PostService {
 }
 
 func (s *PostService) RegisterRoutes(router *gin.RouterGroup) {
-	router.GET("/posts", WithJWTAuth(s.getPosts, s.store))
-	router.POST("/posts", WithJWTAuth(s.createPost, s.store))
+	router.GET("/board/:bid/posts", s.getPostsByBoardId)
+	router.GET("/board/:bid/posts/:pid", s.getPost)
+	router.POST("/board/:bid/posts", WithJWTAuth(s.createPost, s.store))
+	router.PUT("/board/:bid/posts/:pid", WithJWTAuth(s.updatePost, s.store))
+	router.DELETE("/board/:bid/posts/:pid", WithJWTAuth(s.deletePost, s.store))
+	router.GET("/user/:uid/posts", s.getPostsByUserId)
 }
 
-func (s *PostService) getPosts(c *gin.Context) {
-	posts, err := s.store.GetPosts()
+func (s *PostService) getPostsByBoardId(c *gin.Context) {
+	bid, err := strconv.Atoi(c.Param("bid"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "board id must be an integer"})
+		return
+	}
+
+	posts, err := s.store.GetPostsByBoardId(int64(bid))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -32,7 +43,41 @@ func (s *PostService) getPosts(c *gin.Context) {
 	c.JSON(http.StatusOK, posts)
 }
 
+func (s *PostService) getPostsByUserId(c *gin.Context) {
+	uid := c.Param("uid")
+
+	posts, err := s.store.GetPostsByUserId(uid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, posts)
+}
+
+func (s *PostService) getPost(c *gin.Context) {
+	pid, err := strconv.Atoi(c.Param("pid"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "post id must be an integer"})
+		return
+	}
+
+	post, err := s.store.GetPost(int64(pid))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, post)
+}
+
 func (s *PostService) createPost(c *gin.Context) {
+	bid, err := strconv.Atoi(c.Param("bid"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "board id must be an integer"})
+		return
+	}
+
 	var post Post
 	if err := c.BindJSON(&post); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -44,13 +89,53 @@ func (s *PostService) createPost(c *gin.Context) {
 		return
 	}
 
-	p, err := s.store.CreatePost(&post)
+	post.AuthorID = c.GetString("userId")
+	post.BoardID = int64(bid)
+
+	u, err := s.store.CreatePost(&post)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, p)
+	c.JSON(http.StatusCreated, u)
+}
+
+func (s *PostService) updatePost(c *gin.Context) {
+	var post Post
+	if err := c.BindJSON(&post); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := validatePostPayload(&post); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	u, err := s.store.UpdatePost(&post)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, u)
+}
+
+func (s *PostService) deletePost(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("pid"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "id must be an integer"})
+		return
+	}
+
+	err = s.store.DeletePost(int64(id))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func validatePostPayload(post *Post) error {

@@ -9,7 +9,7 @@
             <div class="options-container">
                 <div class="like-container">
                     <i class="fa fa-heart" :class="{ liked: isLiked, animated: appStore.animationsEnabled }" @click="toggleLike"></i>
-                    <p>{{ post.likes }}</p>
+                    <p>{{ post.likeCount }}</p>
                 </div>
                 <div class="delete-post-container" v-if="canDelete">
                     <i class="fa fa-trash" :class="{ animated: appStore.animationsEnabled }" @click="deletePost"></i>
@@ -35,27 +35,39 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import router from '@/router';
 import { useMeta } from 'vue-meta'
 import AvatarPreview from '@/components/AvatarPreview.vue';
 import { useUserStore } from '@/stores/UserStore.js';
 import { useAppStore } from '@/stores/AppStore';
+import { usePostStore } from '@/stores/PostStore';
 
 const userStore = useUserStore()
 const appStore = useAppStore()
 
 const post = ref({
-    authorId: '1',
-    title: 'Post Title',
-    content: 'Exercitation velit esse amet laboris dolor in. Ut consequat dolore duis veniam dolor elit ut ipsum. Ipsum commodo deserunt velit consectetur non elit consequat laboris excepteur sint mollit qui.',
-    likes: 12
+    authorId: '',
+    title: '',
+    content: '',
+    likeCount: 0
 })
 
-const comments = ref([
-    { id: 1, content: 'Comment 1', authorId: '2', author: { name: 'Author 1', avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYloKopOZ_oudmWTNK-xVmdVPxdKsgKniHbr8Vr0hk1g&s' } },
-    { id: 2, content: 'Comment 2', authorId: '3', author: { name: 'Author 2', avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYloKopOZ_oudmWTNK-xVmdVPxdKsgKniHbr8Vr0hk1g&s' } },
-    { id: 3, content: 'Comment 3', authorId: '4', author: { name: 'Author 3', avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYloKopOZ_oudmWTNK-xVmdVPxdKsgKniHbr8Vr0hk1g&s' } }
-])
+const boardId = router.currentRoute.value.params.bid
+const postId = router.currentRoute.value.params.pid
+const postStore = usePostStore()
+onMounted(() => {
+    postStore.fetchPost(boardId, postId).then((fetchedPost) => {
+        post.value = fetchedPost
+        console.log('Post fetched:', fetchedPost)
+    }).catch((err) => {
+        if (err === 'Post not found') {
+            router.push({ name: 'not-found' })
+        }
+    })
+})
+
+const comments = ref([])
 
 useMeta({
     title: 'Post: ' + post.value.title + ' - PostIt',
@@ -69,7 +81,9 @@ const isLiked = ref(false)
 
 function toggleLike() {
     isLiked.value = !isLiked.value
-    post.value.likes += isLiked.value ? 1 : -1
+    post.value.likeCount += isLiked.value ? 1 : -1
+    post.value.id = postId
+    postStore.updatePost(post.value)
 }
 
 const canDelete = computed(() => {
@@ -79,7 +93,9 @@ const canDelete = computed(() => {
 })
 
 function deletePost() {
-    console.log('Post deleted')
+    alert('Are you sure you want to delete this post?')
+    postStore.deletePost(boardId, postId)
+    router.go(-1)
 }
 </script>
 

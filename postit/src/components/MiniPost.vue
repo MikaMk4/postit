@@ -1,10 +1,13 @@
 <template>
     <div class="mini-post" @click="miniPostClicked">
         <div class="mini-post__title">
-        <h2>{{ post.title }}</h2>
+            <h2>{{ post.title }}</h2>
         </div>
-        <div class="mini-post__content">
-        <p>{{ post.content }}</p>
+            <div class="mini-post__content">
+            <p>{{ post.content }}</p>
+        </div>
+        <div class="mini-post-tn">
+            <img :src="post.thumbnail" alt="thumbnail" />
         </div>
     </div>
 </template>
@@ -20,7 +23,7 @@ export default {
     },
     methods: {
         miniPostClicked() {
-            this.$router.push({ name: 'post', params: { id: this.post.id } });
+            this.$router.push({ name: 'post', params: { pid: this.post.id, bid: this.post.boardId } });
         }
     }
 }
@@ -42,5 +45,10 @@ export default {
 
 .mini-post > * {
     margin: 0.5rem;
+}
+
+.mini-post-tn > img {
+    width: 100%;
+    height: auto;
 }
 </style>

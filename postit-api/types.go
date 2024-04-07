@@ -7,11 +7,14 @@ import (
 )
 
 type Post struct {
-	ID        int64     `json:"id"`
-	Title     string    `json:"title"`
-	Content   string    `json:"content"`
-	AuthorID  int       `json:"author_id"`
-	CreatedAt time.Time `json:"created_at"`
+	ID        int64       `json:"id"`
+	Title     string      `json:"title"`
+	Content   string      `json:"content"`
+	Thumbnail null.String `json:"thumbnail"`
+	LikeCount int         `json:"likeCount"`
+	AuthorID  string      `json:"authorId"`
+	BoardID   int64       `json:"boardId,string"`
+	CreatedAt time.Time   `json:"created_at"`
 }
 
 type User struct {

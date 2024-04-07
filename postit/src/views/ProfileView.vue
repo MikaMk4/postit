@@ -16,7 +16,7 @@
         <div class="profile-posts">
             <h2>Posts</h2>
             <div class="profile-posts-list">
-                <MiniPost v-for="post in userStore.user.posts" :post="post" :key="post.id"/>
+                <MiniPost v-for="post in posts" :post="post" :key="post.id"/>
             </div>
         </div>
     </div>
@@ -24,10 +24,29 @@
 
 <script setup>
 import { useUserStore } from '@/stores/UserStore.js'
+import { usePostStore } from '@/stores/PostStore'
+import { useMeta } from 'vue-meta'
 import MiniPost from '@/components/MiniPost.vue'
 import AvatarPreview from '@/components/AvatarPreview.vue'
+import { onMounted, ref } from 'vue'
+
+useMeta({
+    title: 'Profile',
+    htmlAttrs: {
+        lang: 'en',
+        amp: true
+    }
+})
 
 const userStore = useUserStore()
+
+const postStore = usePostStore()
+const posts = ref([])
+onMounted(() => {
+    postStore.fetchPostsByUser(userStore.user.id).then((ps) => {
+        posts.value = ps
+    })
+})
 </script>
 
 <style>
