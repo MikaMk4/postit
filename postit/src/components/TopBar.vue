@@ -20,7 +20,7 @@
                 </button>
             </router-link>
             <div v-else>
-                <AvatarPreview :avatar="userStore.user.avatar" :pId="userStore.user.id"/>
+                <AvatarPreview :avatar="userAvatar" :pId="userId"/>
             </div>
         </div>
     </div>
@@ -34,6 +34,9 @@ import { useAppStore } from '@/stores/AppStore.js'
 
 const userStore = useUserStore()
 const appStore = useAppStore()
+
+const userAvatar = computed(() => userStore.user?.avatar)
+const userId = computed(() => userStore.user?.id)
 
 const isAuthed = computed(() => {
   return userStore.user !== null
