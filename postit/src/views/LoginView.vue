@@ -8,7 +8,7 @@
             </div>
             <div class="login" v-else>
                 <h1>Sign Up</h1>
-                <AuthInput submitText="Sign Up" />
+                <AuthInput @submit="signUp" submitText="Sign Up" />
                 <p>Already have an account? <br><a @click="toggleLogin(true)">Login</a></p>
             </div>
         </div>
@@ -48,9 +48,29 @@ function toggleLogin(value) {
 async function login(data) {
     if (data.username !== '' && data.password !== '') {
         loading.value = true;
-        await userStore.login(data.username);
-        loading.value = false;
-        router.go(-1);
+        try {
+            await userStore.login(data.username, data.password);
+            router.go(-1);
+        } catch (error) {
+            loading.value = false;
+            alert(error);
+        }
+    } else {
+        alert('Cannot leave fields blank.');
+    }
+}
+
+async function signUp(data) {
+    if (data.username !== '' && data.password !== '') {
+        loading.value = true;
+
+        try {
+            await userStore.signUp(data.username, data.password);
+            router.go(-1);
+        } catch (error) {
+            loading.value = false;
+            alert(error);
+        }
     } else {
         alert('Cannot leave fields blank.');
     }

@@ -2,6 +2,8 @@ package main
 
 import (
 	"database/sql"
+
+	"github.com/google/uuid"
 )
 
 type Store interface {
@@ -14,6 +16,7 @@ type Store interface {
 	GetUserById(id string) (*User, error)
 	GetUserByName(username string) (*User, error)
 	CreateUser(user *User) (*User, error)
+	UpdateUser(user *User) (*User, error)
 }
 
 type Storage struct {
@@ -84,7 +87,7 @@ func (s *Storage) GetUsers() ([]User, error) {
 
 func (s *Storage) GetUserById(id string) (*User, error) {
 	var user User
-	err := s.db.QueryRow("SELECT id, username FROM users WHERE id = ?", id).Scan(&user.ID, &user.Username)
+	err := s.db.QueryRow("SELECT id, username, avatar, bio, password FROM users WHERE id = ?", id).Scan(&user.ID, &user.Username, &user.Avatar, &user.Bio, &user.Password)
 	return &user, err
 }
 
@@ -95,17 +98,20 @@ func (s *Storage) GetUserByName(username string) (*User, error) {
 }
 
 func (s *Storage) CreateUser(user *User) (*User, error) {
-	rows, err := s.db.Exec("INSERT INTO users (username, password) VALUES (?, ?)", user.Username, user.Password)
+	uuid := uuid.New()
+	id := uuid.String()
 
-	if err != nil {
-		return nil, err
-	}
+	_, err := s.db.Exec("INSERT INTO users (username, password, id) VALUES (?, ?, ?)", user.Username, user.Password, id)
 
-	id, err := rows.LastInsertId()
 	if err != nil {
 		return nil, err
 	}
 
 	user.ID = id
 	return user, nil
+}
+
+func (s *Storage) UpdateUser(user *User) (*User, error) {
+	_, err := s.db.Exec("UPDATE users SET username = ?, password = ?, avatar = ?, bio = ? WHERE id = ?", user.Username, user.Password, user.Avatar, user.Bio, user.ID)
+	return user, err
 }

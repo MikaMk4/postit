@@ -21,6 +21,8 @@ func NewUserService(store Store) *UserService {
 func (s *UserService) RegisterRoutes(router *gin.RouterGroup) {
 	router.POST("/signup", s.registerUser)
 	router.POST("/login", s.loginUser)
+	router.GET("/user", WithJWTAuth(s.getUser, s.store))
+	router.PUT("/user", WithJWTAuth(s.updateUser, s.store))
 }
 
 func (s *UserService) registerUser(c *gin.Context) {
@@ -76,12 +78,12 @@ func (s *UserService) loginUser(c *gin.Context) {
 	}
 
 	if u == nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid username or password"})
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid username"})
 		return
 	}
 
-	if !ComparePasswords(u.Password, []byte(user.Password)) {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid username or password"})
+	if !ComparePasswords(u.Password, user.Password) {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid password"})
 		return
 	}
 
@@ -92,6 +94,58 @@ func (s *UserService) loginUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"token": token})
+}
+
+func (s *UserService) getUser(c *gin.Context) {
+	userId := c.GetString("userId")
+
+	u, err := s.store.GetUserById(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error() + " " + userId})
+		panic(err)
+	}
+
+	c.JSON(http.StatusOK, u)
+}
+
+func (s *UserService) updateUser(c *gin.Context) {
+	userId := c.GetString("userId")
+
+	var user User
+	if err := c.BindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	u, err := s.store.GetUserById(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if user.Username != "" {
+		u.Username = user.Username
+	}
+
+	if user.Password != "" && user.Password != u.Password {
+		u.Password, err = HashPassword(user.Password)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+	}
+
+	u.Avatar = user.Avatar
+	u.Bio = user.Bio
+
+	_, err = s.store.UpdateUser(u)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, nil)
 }
 
 func validateUserPayload(user *User) error {
@@ -107,7 +161,7 @@ func validateUserPayload(user *User) error {
 	return nil
 }
 
-func createAndSetAuthCookie(c *gin.Context, id int64) (string, error) {
+func createAndSetAuthCookie(c *gin.Context, id string) (string, error) {
 	secret := []byte(os.Getenv("JWT_SECRET"))
 	token, err := CreateJWT(id, secret)
 	if err != nil {

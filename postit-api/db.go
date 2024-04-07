@@ -19,7 +19,7 @@ func NewMySqlStorage(cfg mysql.Config) *MySqlStorage {
 	}
 
 	for err = db.Ping(); err != nil; {
-		log.Println("Waiting for MySQL to be ready...")
+		log.Println("Waiting for MySQL to be ready... (" + err.Error() + ")")
 		time.Sleep(2 * time.Second)
 	}
 
@@ -46,10 +46,12 @@ func (s *MySqlStorage) Init() (*sql.DB, error) {
 func (s *MySqlStorage) createUsersTable() error {
 	_, err := s.db.Exec(`
 	CREATE TABLE IF NOT EXISTS users (
-		id INT AUTO_INCREMENT PRIMARY KEY,
+		id VARCHAR(255) PRIMARY KEY,
 		username VARCHAR(255) NOT NULL UNIQUE,
 		password VARCHAR(255) NOT NULL,
-		created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+		created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		avatar TEXT,
+		bio TEXT
 	)`)
 	if err != nil {
 		return err
@@ -65,7 +67,7 @@ func (s *MySqlStorage) createPostsTable() error {
 		title VARCHAR(255) NOT NULL,
 		content TEXT NOT NULL,
 		created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		author_id INT NOT NULL,
+		author_id VARCHAR(255) NOT NULL,
 
 		FOREIGN KEY (author_id) REFERENCES users (id)
 	)`)

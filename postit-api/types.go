@@ -1,6 +1,10 @@
 package main
 
-import "time"
+import (
+	"time"
+
+	"gopkg.in/guregu/null.v3"
+)
 
 type Post struct {
 	ID        int64     `json:"id"`
@@ -11,8 +15,10 @@ type Post struct {
 }
 
 type User struct {
-	ID        int64     `json:"id"`
-	Username  string    `json:"username"`
-	Password  string    `json:"password"`
-	CreatedAt time.Time `json:"created_at"`
+	ID        string      `json:"id"`
+	Username  string      `json:"username"`
+	Password  string      `json:"password"`
+	CreatedAt time.Time   `json:"created_at"`
+	Avatar    null.String `json:"avatar"`
+	Bio       null.String `json:"bio"`
 }

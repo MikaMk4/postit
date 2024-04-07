@@ -62,7 +62,7 @@ const aSize = computed(
     justify-content: center;
     align-items: center;
     width: v-bind(aSize);
-    height: v-bind(aSize);
+    height: auto;
     overflow: hidden;
     border-radius: 50%;
 }
@@ -91,8 +91,8 @@ const aSize = computed(
 
 .avatar-img {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: v-bind(aSize);
+    height: auto;
     object-fit: cover;
 }
 

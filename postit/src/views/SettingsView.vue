@@ -14,23 +14,30 @@
         </div>
         <div class="user-settings" v-if="isAuthed">
             <h2>User Settings</h2>
-            <AvatarPreview :avatar="userStore.user.avatar" :size="15" :isEditable="true" @changeAvatar="changeAvatar"/>
+            <AvatarPreview :avatar="avatar" :size="15"/>
             <form @submit.prevent="newUserInfoSet">
                 <div>
+                    <label for="avatar">Avatar URL</label>
+                    <input type="text" id="avatar" v-model="avatar" />
+                </div>
+                <div>
                     <label for="username">Username</label>
-                    <input type="text" id="username" v-model="userStore.user.name" />
+                    <input type="text" id="username" v-model="username" />
                 </div>
                 <div>
                     <label for="bio">About me</label>
-                    <textarea id="bio" v-model="userStore.user.bio"></textarea>
-                </div>
-                <div>
-                    <label for="password">New Password</label>
-                    <input type="password" id="password" />
-                    <label for="confirm-password">Confirm New Password</label>
-                    <input type="password" id="confirm-password" />
+                    <textarea id="bio" v-model="bio"></textarea>
                 </div>
                 <button type="submit">Save Changes</button>
+            </form>
+            <form @submit.prevent="editPassword">
+                <div>
+                    <label for="password">New Password</label>
+                    <input type="password" id="password" v-model="password" />
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" v-model="confirmPassword" />
+                </div>
+                <button type="submit">Change Password</button>
             </form>
             <button @click="logout">Logout</button>
         </div>
@@ -38,7 +45,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useMeta } from 'vue-meta';
 import AvatarPreview from '@/components/AvatarPreview.vue';
 import ToggleSwitch from '@/components/ToggleSwitch.vue';
@@ -53,15 +60,59 @@ useMeta({
     }
 });
 
-const userStore = useUserStore();
-const appStore = useAppStore();
+const userStore = useUserStore()
+const appStore = useAppStore()
+
+const avatar = ref(userStore.user?.avatar)
+const username = ref(userStore.user?.username)
+const bio = ref(userStore.user?.bio)
+const password = ref('')
+const confirmPassword = ref('')
+
+async function newUserInfoSet() {
+    userStore.startEdit()
+
+    userStore.user.avatar = avatar.value
+    userStore.user.username = username.value
+    userStore.user.bio = bio.value
+
+    try {
+        await userStore.updateUser()
+    } catch (error) {
+        alert(error)
+        userStore.cancelEdit()
+        avatar.value = userStore.user.avatar
+        username.value = userStore.user.username
+        bio.value = userStore.user.bio
+    }
+}
+
+async function editPassword() {
+    if (password.value !== '' && password.value === confirmPassword.value) {
+        userStore.startEdit()
+        userStore.user.password = password.value
+
+        try {
+            await userStore.updateUser()
+            alert('Password changed successfully.')
+        } catch (error) {
+            alert(error)
+            userStore.cancelEdit()
+        } finally {
+            password.value = ''
+            confirmPassword.value = ''
+        }
+    } else {
+        alert('Passwords do not match.')
+    }
+}
 
 const isDarkMode = computed({
     get() {
-        return appStore.darkMode;
+        return appStore.darkMode
     },
     set(value) {
-        appStore.darkMode = value;
+        appStore.darkMode = value
     }
 });
 
@@ -77,10 +128,6 @@ const animationsEnabled = computed({
 const isAuthed = computed(() => {
     return userStore.user !== null;
 });
-
-function changeAvatar() {
-    console.log('Change avatar');
-}
 
 function logout() {
     userStore.logout();

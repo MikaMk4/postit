@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +18,7 @@ func WithJWTAuth(handler gin.HandlerFunc, store Store) gin.HandlerFunc {
 		// validate the token
 		token, err := validateJWT(tokenString)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized" + err.Error()})
 			c.Abort()
 			return
 		}
@@ -35,11 +34,12 @@ func WithJWTAuth(handler gin.HandlerFunc, store Store) gin.HandlerFunc {
 
 		_, err = store.GetUserById(userID)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized" + err.Error()})
 			c.Abort()
 			return
 		}
 		// call the handler func and continue to the endpoint
+		c.Set("userId", userID)
 		handler(c)
 	}
 }
@@ -66,9 +66,9 @@ func validateJWT(tokenString string) (*jwt.Token, error) {
 	})
 }
 
-func CreateJWT(id int64, secret []byte) (string, error) {
+func CreateJWT(id string, secret []byte) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"userId":    strconv.Itoa(int(id)),
+		"userId":    id,
 		"expiresAt": time.Now().Add(time.Hour * 24).Unix(),
 	})
 
@@ -82,14 +82,10 @@ func CreateJWT(id int64, secret []byte) (string, error) {
 
 func HashPassword(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		return "", err
-	}
-
-	return string(hash), nil
+	return string(hash), err
 }
 
-func ComparePasswords(hashed string, plain []byte) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hashed), plain)
+func ComparePasswords(hashed string, plain string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hashed), []byte(plain))
 	return err == nil
 }
