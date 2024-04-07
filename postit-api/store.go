@@ -17,6 +17,13 @@ type Store interface {
 	GetUserByName(username string) (*User, error)
 	CreateUser(user *User) (*User, error)
 	UpdateUser(user *User) (*User, error)
+
+	// Boards
+	GetBoards() ([]Board, error)
+	GetBoard(id int64) (*Board, error)
+	CreateBoard(board *Board) (*Board, error)
+	UpdateBoard(board *Board) (*Board, error)
+	DeleteBoard(id int64) error
 }
 
 type Storage struct {
@@ -114,4 +121,56 @@ func (s *Storage) CreateUser(user *User) (*User, error) {
 func (s *Storage) UpdateUser(user *User) (*User, error) {
 	_, err := s.db.Exec("UPDATE users SET username = ?, password = ?, avatar = ?, bio = ? WHERE id = ?", user.Username, user.Password, user.Avatar, user.Bio, user.ID)
 	return user, err
+}
+
+func (s *Storage) GetBoards() ([]Board, error) {
+	rows, err := s.db.Query("SELECT id, name, description, thumbnail, creator_id FROM boards")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	boards := []Board{}
+	for rows.Next() {
+		var board Board
+		err := rows.Scan(&board.ID, &board.Name, &board.Description, &board.Thumbnail, &board.CreatorId)
+		if err != nil {
+			return nil, err
+		}
+		boards = append(boards, board)
+	}
+
+	return boards, nil
+}
+
+func (s *Storage) GetBoard(id int64) (*Board, error) {
+	var board Board
+	err := s.db.QueryRow("SELECT name, description, thumbnail, creator_id FROM boards WHERE id = ?", id).Scan(&board.Name, &board.Description, &board.Thumbnail, &board.CreatorId)
+	return &board, err
+}
+
+func (s *Storage) CreateBoard(board *Board) (*Board, error) {
+	rows, err := s.db.Exec("INSERT INTO boards (name, description, thumbnail, creator_id) VALUES (?, ?, ?, ?)", board.Name, board.Description, board.Thumbnail, board.CreatorId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := rows.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	board.ID = id
+	return board, nil
+}
+
+func (s *Storage) UpdateBoard(board *Board) (*Board, error) {
+	_, err := s.db.Exec("UPDATE boards SET name = ?, description = ?, thumbnail = ? WHERE id = ?", board.Name, board.Description, board.Thumbnail, board.ID)
+	return board, err
+}
+
+func (s *Storage) DeleteBoard(id int64) error {
+	_, err := s.db.Exec("DELETE FROM boards WHERE id = ?", id)
+	return err
 }

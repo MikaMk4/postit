@@ -40,6 +40,10 @@ func (s *MySqlStorage) Init() (*sql.DB, error) {
 		return nil, err
 	}
 
+	if err := s.createBoardsTable(); err != nil {
+		return nil, err
+	}
+
 	return s.db, nil
 }
 
@@ -70,6 +74,25 @@ func (s *MySqlStorage) createPostsTable() error {
 		author_id VARCHAR(255) NOT NULL,
 
 		FOREIGN KEY (author_id) REFERENCES users (id)
+	)`)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *MySqlStorage) createBoardsTable() error {
+	_, err := s.db.Exec(`
+	CREATE TABLE IF NOT EXISTS boards (
+		id INT AUTO_INCREMENT PRIMARY KEY,
+		name VARCHAR(255) NOT NULL,
+		description TEXT NOT NULL,
+		thumbnail TEXT,
+		created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		creator_id VARCHAR(255) NOT NULL,
+
+		FOREIGN KEY (creator_id) REFERENCES users (id)
 	)`)
 	if err != nil {
 		return err

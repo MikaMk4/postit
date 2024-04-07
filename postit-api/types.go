@@ -22,3 +22,12 @@ type User struct {
 	Avatar    null.String `json:"avatar"`
 	Bio       null.String `json:"bio"`
 }
+
+type Board struct {
+	ID          int64       `json:"id,string"`
+	Name        string      `json:"name"`
+	Description string      `json:"description"`
+	Thumbnail   null.String `json:"thumbnail"`
+	CreatedAt   time.Time   `json:"created_at"`
+	CreatorId   string      `json:"creatorId"`
+}

@@ -1,8 +1,14 @@
 <template>
     <div class="board">
-        <h1>{{ board.title }}</h1>
-        <div>
-            <router-link :to="{ name: 'edit-board', params: { id: board.id } }">
+        <div class="board-header">
+            <h1>{{ boardName }}</h1>
+            <div class="delete-board" v-if="canEdit">
+                <i class="fa fa-trash" :class="{ animated: appStore.animationsEnabled }" @click="deleteBoard"></i>
+            </div>
+        </div>
+        <p>{{ boardDescription }}</p>
+        <div v-if="canEdit">
+            <router-link :to="{ name: 'edit-board', params: { id: boardId } }">
                 <button>Edit this Board</button>
             </router-link>
         </div>
@@ -18,9 +24,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import MiniPost from '@/components/MiniPost.vue'
 import { useMeta } from 'vue-meta'
+import { useBoardStore } from '@/stores/BoardStore';
+import { useUserStore } from '@/stores/UserStore';
+import { useAppStore } from '@/stores/AppStore';
+import router from '@/router';
+
+const appStore = useAppStore()
 
 useMeta({
   title: 'Board',
@@ -30,32 +42,56 @@ useMeta({
   }
 })
 
-const board = ref(
-    {
-        id: 1,
-        title: 'First Board',
-        posts: [
-            {
-                id: 1,
-                title: 'First Post',
-                content: 'This is the first post on this board.'
-            },
-            {
-                id: 2,
-                title: 'Second Post',
-                content: 'This is the second post on this board.'
-            },
-            {
-                id: 3,
-                title: 'Third Post',
-                content: 'This is the third post on this board.'
-            }
-        ]
-    }
-)
+const boardStore = useBoardStore()
+const board = ref({
+    id: '',
+    name: '',
+    posts: []
+})
+
+const boardId = router.currentRoute.value.params.id
+const boardName = ref('')
+const boardDescription = ref('')
+const creatorId = ref(-1)
+
+onBeforeMount(() => {
+    const id = router.currentRoute.value.params.id
+
+    boardStore.fetchBoard(id).then((board) => {
+        boardName.value = board.name
+        boardDescription.value = board.description
+        creatorId.value = board.creatorId
+    }).catch((error) => {
+        if (error === "Board not found") {
+        router.push({ name: 'not-found' })
+        }
+    })
+})
+
+const userStore = useUserStore()
+const canEdit = computed(() => {
+  return userStore.user?.id === creatorId.value
+})
+
+function deleteBoard() {
+    alert('Are you sure you want to delete this board?')
+    boardStore.deleteBoard(boardId)
+    router.push({ name: 'boards' })
+}
 </script>
 
 <style>
+.board-header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.board-header > * {
+    margin: 0 0.5rem;
+}
+
 .board {
     display: flex;
     flex-flow: column nowrap;
@@ -70,5 +106,44 @@ const board = ref(
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
+}
+
+.delete-board {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.delete-board > i {
+    color: grey;
+    cursor: pointer;
+}
+
+.delete-board > i:hover {
+    color: red;
+}
+
+.delete-board > i:hover.animated {
+    animation: delete-animation 0.1s forwards linear;
+}
+
+@keyframes delete-animation {
+    0% {
+        transform: translate(0, 0);
+    }
+    25% {
+        transform: translate(0.1rem, 0);
+    }
+    50% {
+        transform: translate(0, 0);
+    }
+    75% {
+        transform: translate(-0.1rem, 0);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
 }
 </style>

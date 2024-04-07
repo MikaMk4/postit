@@ -4,8 +4,13 @@
         <div class="profile-info">
             <AvatarPreview :avatar="userStore.user.avatar" :size="10" :expandable="true"/>
             <div class="profile-info-text">
-                <p>Username</p>
-                <p>Bio</p>
+                <div>
+                    <h2>{{ userStore.user.username }}</h2>
+                </div>
+                <div class="profile-info-bio">
+                    <h3>Bio:</h3>
+                    <p>{{ userStore.user.bio }}</p>
+                </div>
             </div>
         </div>
         <div class="profile-posts">

@@ -1,20 +1,23 @@
 <template>
     <div class="board-edit">
         <h1>Edit Board</h1>
-        <form @submit.prevent="submitForm">
-        <label for="title">Title</label>
-        <input type="text" id="title" v-model="title" required />
-        <label for="description">Description</label>
-        <textarea id="description" v-model="description" required></textarea>
-        <button type="submit" :disabled="!canEdit">Save</button>
+            <form @submit.prevent="submitForm">
+            <label for="title">Name</label>
+            <input type="text" id="title" v-model="title" required />
+            <label for="thumbnail">Thumbnail Url</label>
+            <input type="text" id="thumbnail" v-model="thumbnail" />
+            <label for="description">Description</label>
+            <textarea id="description" v-model="description" required></textarea>
+            <button type="submit" :disabled="!canEdit">Save</button>
         </form>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useMeta } from 'vue-meta'
+import { useBoardStore } from '@/stores/BoardStore'
 
 useMeta({
     title: 'Edit Board',
@@ -26,17 +29,32 @@ useMeta({
 
 const router = useRouter()
 
-const title = ref('First Board')
-const description = ref('This is the first board on the site.')
+const title = ref('')
+const thumbnail = ref('')
+const description = ref('')
 const canEdit = computed(() => {
     return title.value !== '' && description.value !== ''
 })
 
 function submitForm() {
-    console.log('Title:', title.value)
-    console.log('Description:', description.value)
+    boardStore.updateBoard({
+        id: router.currentRoute.value.params.id,
+        name: title.value,
+        thumbnail: thumbnail.value,
+        description: description.value
+    })
     router.go(-1)
 }
+
+const boardStore = useBoardStore()
+onBeforeMount(() => {
+    const id = router.currentRoute.value.params.id
+    boardStore.fetchBoard(id).then((board) => {
+        title.value = board.name,
+        thumbnail.value = board.thumbnail,
+        description.value = board.description
+    })
+})
 </script>
 
 <style>

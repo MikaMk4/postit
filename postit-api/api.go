@@ -40,5 +40,8 @@ func (s *ApiServer) Start() error {
 	usersService := NewUserService(s.store)
 	usersService.RegisterRoutes(subrouter)
 
+	boardsService := NewBoardService(s.store)
+	boardsService.RegisterRoutes(subrouter)
+
 	return router.Run(s.addr)
 }
