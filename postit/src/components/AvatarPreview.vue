@@ -92,7 +92,7 @@ const aSize = computed(
 .avatar-img {
     display: block;
     width: v-bind(aSize);
-    height: auto;
+    height: v-bind(aSize);
     object-fit: cover;
 }
 

@@ -23,6 +23,7 @@ func (s *UserService) RegisterRoutes(router *gin.RouterGroup) {
 	router.POST("/login", s.loginUser)
 	router.GET("/user", WithJWTAuth(s.getUser, s.store))
 	router.PUT("/user", WithJWTAuth(s.updateUser, s.store))
+	router.GET("/users/:id", s.getUserById)
 }
 
 func (s *UserService) registerUser(c *gin.Context) {
@@ -103,6 +104,18 @@ func (s *UserService) getUser(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error() + " " + userId})
 		panic(err)
+	}
+
+	c.JSON(http.StatusOK, u)
+}
+
+func (s *UserService) getUserById(c *gin.Context) {
+	userId := c.Param("id")
+
+	u, err := s.store.GetUserById(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, u)

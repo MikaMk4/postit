@@ -2,14 +2,14 @@
     <div class="profile">
         <h1>Profile</h1>
         <div class="profile-info">
-            <AvatarPreview :avatar="userStore.user.avatar" :size="10" :expandable="true"/>
+            <AvatarPreview :avatar="user.avatar" :size="10" :expandable="true"/>
             <div class="profile-info-text">
                 <div>
-                    <h2>{{ userStore.user.username }}</h2>
+                    <h2>{{ user.username }}</h2>
                 </div>
                 <div class="profile-info-bio">
                     <h3>Bio:</h3>
-                    <p>{{ userStore.user.bio }}</p>
+                    <p>{{ user.bio }}</p>
                 </div>
             </div>
         </div>
@@ -29,6 +29,7 @@ import { useMeta } from 'vue-meta'
 import MiniPost from '@/components/MiniPost.vue'
 import AvatarPreview from '@/components/AvatarPreview.vue'
 import { onMounted, ref } from 'vue'
+import router from '@/router'
 
 useMeta({
     title: 'Profile',
@@ -42,8 +43,14 @@ const userStore = useUserStore()
 
 const postStore = usePostStore()
 const posts = ref([])
+const user = ref({})
+const userId = router.currentRoute.value.params.id
 onMounted(() => {
-    postStore.fetchPostsByUser(userStore.user.id).then((ps) => {
+    userStore.fetchUserById(userId).then((u) => {
+        user.value = u
+    })
+
+    postStore.fetchPostsByUser(userId).then((ps) => {
         posts.value = ps
     })
 })

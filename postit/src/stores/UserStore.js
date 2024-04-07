@@ -76,6 +76,17 @@ export const useUserStore = defineStore('userStore', {
                 ...data
             }
         },
+        async fetchUserById(uid) {
+            const response = await fetch(`http://localhost:3000/api/v1/users/${uid}`)
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to fetch user')
+            }
+
+            return data
+        },
         async updateUser() {
             const response = await fetch('http://localhost:3000/api/v1/user', {
                 method: 'PUT',

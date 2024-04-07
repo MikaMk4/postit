@@ -2,8 +2,8 @@
     <div class="post-view">
         <div class="post">
             <div class="post-header">
-                <AvatarPreview :avatar="userStore.user.avatar" :size="2" :animationsEnabled="appStore.animationsEnabled" :pId="userStore.user.id"/>
-                <h3>{{ userStore.user.name }}</h3>
+                <AvatarPreview :avatar="author.avatar" :size="2" :animationsEnabled="appStore.animationsEnabled" :pId="author.id"/>
+                <h3>{{ author.username }}</h3>
                 <h1>{{ post.title }}</h1>
             </div>
             <div class="options-container">
@@ -17,6 +17,9 @@
             </div>
             <div class="post-content-container">
                 <p>{{ post.content }}</p>
+            </div>
+            <div class="post-thumbnail">
+                <img :src="post.thumbnail" alt="Thumbnail" />
             </div>
         </div>
         <div class="comment-container">
@@ -56,6 +59,7 @@ const post = ref({
 const boardId = router.currentRoute.value.params.bid
 const postId = router.currentRoute.value.params.pid
 const postStore = usePostStore()
+const author = ref({})
 onMounted(() => {
     postStore.fetchPost(boardId, postId).then((fetchedPost) => {
         post.value = fetchedPost
@@ -64,6 +68,14 @@ onMounted(() => {
         if (err === 'Post not found') {
             router.push({ name: 'not-found' })
         }
+    }).then(() => {
+        userStore.fetchUserById(post.value.authorId).then((fetchedAuthor) => {
+            author.value = fetchedAuthor
+        }).catch((err) => {
+            if (err === 'User not found') {
+                router.push({ name: 'not-found' })
+            }
+        })
     })
 })
 
@@ -242,6 +254,18 @@ function deletePost() {
 
 .post-content-container {
     text-align: left;
+}
+
+.post-thumbnail {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-thumbnail > img {
+    width: 100%;
+    height: auto;
 }
 
 .comment-container {

@@ -37,6 +37,7 @@ services:
       - MYSQL_DATABASE=postit
     volumes:
       - db-data:/var/lib/mysql
+      - ./dump:/dump
     networks:
       - postit-network
     ports:

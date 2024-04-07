@@ -48,4 +48,9 @@ const miniBoardClicked = () => {
 .mini-board > * {
     margin: 0.5rem;
 }
+
+.mini-board__thumbnail > img {
+    width: 100%;
+    height: auto;
+}
 </style>
